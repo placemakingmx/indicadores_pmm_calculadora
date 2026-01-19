@@ -1,49 +1,54 @@
 /* style.css */
 
-/* Importa la fuente Poppins al inicio del archivo */
+/* 1. Importa la fuente Poppins correctamente */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-
-/* Fuente global Poppins */
+/* 2. Fuente global Poppins */
 html, body, [class*="st-"], label, div {
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
+/* 3. Variables de color de tu manual */
 :root {
-  --space:    #0D0D52;
-  --offwhite: #F4EFE2;
-  --blue:     #0047BB;
-  --indigo:   #685BC7;
-  --lush:     #B7BF10;  /* verde (Lush)  */
-  --sunglow:  #FED141;  /* amarillo      */
-  --orange:   #FF5C39;  /* naranja       */
-  --white:    #FFFFFF;
+  --space:   #0D0D52;
+  --offwhite:#F4EFE2;
+  --blue:    #0047BB;
+  --indigo:  #685BC7;
+  --lush:    #B7BF10;  /* verde (Lush) */
+  --sunglow: #FED141;  /* amarillo */
+  --orange:  #FF5C39;  /* naranja */
+  --white:   #FFFFFF;
 }
 
-/* Fondo general de la app */
+/* 4. Fondo general de la app */
 .stApp {
   background-color: var(--offwhite) !important;
   color: var(--space) !important;
 }
 
-/* Quitar esquinas redondeadas de todas las imágenes de la app */
+/* 5. Quitar esquinas redondeadas de todas las imágenes de la app */
 .stApp img {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
-/* Ensure all headers and Streamlit-generated titles use the same font */
+/* 6. Títulos / encabezados con Poppins (corregidos los selectores) */
 h1, h2, h3, h4, h5, h6,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6,
-[data-testid="stAppViewContainer"] h1, [data-testid="stAppViewContainer"] h2,
-.stHeader, .stTitle {
-    font-family: 'Poppins', sans-serif !important;
-    font-weight: 400 !important;
-    line-height: 1.2 !important;
+.stMarkdown h1,
+.stMarkdown h2,
+.stMarkdown h3,
+.stMarkdown h4,
+.stMarkdown h5,
+.stMarkdown h6,
+[data-testid="stAppViewContainer"] h1,
+[data-testid="stAppViewContainer"] h2,
+.stHeader .stTitle {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
 }
 
-/* Botones principales */
-.stButton > button,
-.stForm .stFormSubmitButton > button {
+/* 7. Botones principales (st.button y submit) */
+.stButton > button {
   background-color: var(--blue) !important;
   border-radius: 0 !important;
   border: 1px solid var(--blue) !important;
@@ -52,20 +57,19 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* Hover de botones */
-.stButton > button:hover,
-.stForm .stFormSubmitButton > button:hover {
+.stButton > button:hover {
   background-color: var(--indigo) !important;
   border-color: var(--indigo) !important;
 }
 
-/* Campos de texto y numéricos */
+/* 8. Campos de texto y numéricos */
 .stTextInput > div > div > input,
 .stNumberInput > div > div > input {
   border-radius: 0 !important;
   border: 1px solid var(--blue) !important;
 }
 
-/* Efecto al enfocar (focus) */
+/* Efecto al enfocar (focus) en campos de texto y numéricos */
 .stTextInput > div > div > input:focus,
 .stNumberInput > div > div > input:focus {
   outline: none !important;
@@ -73,41 +77,36 @@ h1, h2, h3, h4, h5, h6,
   box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* azul translúcido */
 }
 
-/* Caja de alerta en naranja */
+/* 9. Caja de alerta en naranja */
 .alerta-naranja {
   background-color: var(--orange);
   color: var(--white);
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
-/* ============================
-   SELECTBOX y MULTISELECT
-   ============================ */
+
+/* 10. ============================ SELECTBOX y MULTISELECT ============================ */
 
 /* Estado normal: borde azul, esquinas rectas, fondo blanco */
-.stSelectbox [data-baseweb="select"],
-.stMultiSelect [data-baseweb="select"],
-.stSelectbox [data-baseweb="select"] > div,
-.stMultiSelect [data-baseweb="select"] > div {
-    border-radius: 0 !important;
-    border: 1px solid var(--blue) !important;   /* #0047BB */
-    background-color: var(--white) !important;  /* #FFFFFF */
-    box-shadow: none !important;
+.stSelectbox > div > div,
+.stMultiSelect > div > div {
+  border-radius: 0 !important;
+  border: 1px solid var(--blue) !important;   /* #0047BB */
+  background-color: var(--white) !important;  /* #FFFFFF */
+  box-shadow: none !important;
 }
 
 /* Estado foco (cuando haces clic o tab) */
-.stSelectbox [data-baseweb="select"]:focus-within,
-.stMultiSelect [data-baseweb="select"]:focus-within,
-.stSelectbox [data-baseweb="select"]:focus-within > div,
-.stMultiSelect [data-baseweb="select"]:focus-within > div {
-    border-color: var(--indigo) !important;     /* #685BC7 */
-    box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* halo azul translúcido */
+.stSelectbox > div > div:focus-within,
+.stMultiSelect > div > div:focus-within {
+  border-color: var(--indigo) !important;  /* #685BC7 */
+  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* halo azul translúcido */
 }
 
 /* Chips del multiselect con tu amarillo Sunglow */
 .stMultiSelect [data-baseweb="tag"] {
-    background-color: var(--sunglow) !important;  /* #FED141 */
-    color: var(--space) !important;               /* #0D0D52 */
-    border-radius: 0 !important;
-    border: none !important;
+  background-color: var(--sunglow) !important;  /* #FED141 */
+  color: var(--space) !important;               /* #0D0D52 */
+  border-radius: 0 !important;
+  border: none !important;
 }
