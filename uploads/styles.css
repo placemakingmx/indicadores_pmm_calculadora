@@ -47,17 +47,40 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.2 !important;
 }
 
+/* Botones principales (st.button, submit, etc.) */
 .stButton > button {
-    background-color: var(--space) !important;
-    border-radius: 8 rem !important;   /* esquinas redondeadas suaves */
-    border: 1px solid var(--space) !important;
-    color: var(--white) !important;
-    box-shadow: none !important;
+  background-color: var(--space) !important;
+  border-radius: 0.5rem !important;   /* o 8rem si quieres píldora, sin espacio */
+  border: 1px solid var(--space) !important;
+  color: var(--white) !important;
+  box-shadow: none !important;
 }
-/* Botones de enlace (st.link_button) */
-.stLinkButton > button,
-.stLinkButton > a {
-    border-radius: 8 rem !important;   
+
+/* Hover de botones normales */
+.stButton > button:hover {
+  background-color: var(--indigo) !important;
+  border-color: var(--indigo) !important;
+  color: var(--white) !important;
+}
+
+/* Botón de enlace (st.link_button) */
+[data-testid="stLinkButton"] > a {
+  background-color: var(--space) !important;
+  border-radius: 0.5rem !important;   /* mismo radio que los otros */
+  border: 1px solid var(--space) !important;
+  color: var(--white) !important;
+  text-decoration: none !important;
+  padding: 0.25rem 0.75rem;           /* opcional, para que se vea como botón */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover del botón de enlace */
+[data-testid="stLinkButton"] > a:hover {
+  background-color: var(--indigo) !important;
+  border-color: var(--indigo) !important;
+  color: var(--white) !important;
 }
 
 /* Hover de botones */
