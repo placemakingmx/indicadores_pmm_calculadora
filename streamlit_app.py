@@ -9,7 +9,7 @@ import re
 # --------------------------------------------------------------------
 BASE_DIR = Path(__file__).parent
 LOGO_PATH = BASE_DIR / "uploads" / "logo.png"
-CSS_PATH = BASE_DIR / "styles.css"
+CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 
 
 # --------------------------------------------------------------------
