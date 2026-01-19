@@ -22,7 +22,6 @@ st.set_page_config(
     layout="centered",
 )
 
-
 # --------------------------------------------------------------------
 # Ocultar menú y footer de Streamlit
 # --------------------------------------------------------------------
@@ -86,8 +85,9 @@ st.markdown("---")
 # --------------------------------------------------------------------
 # Selector de tipo de consulta
 # --------------------------------------------------------------------
-st.subheader("Tutorial:")
-opcion = st.radio(""
+st.subheader("Indicadores a utilizar")
+opcion = st.radio(
+    "Selecciona qué quieres calcular:",
     ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
 )
 
