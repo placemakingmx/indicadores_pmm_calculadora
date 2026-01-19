@@ -87,7 +87,7 @@ st.markdown("---")
 # Selector de tipo de consulta
 # --------------------------------------------------------------------
 opcion = st.radio(
-    "¿Qué quieres consultar?",
+st.subheader("Tutorial:")
     ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
 )
 
