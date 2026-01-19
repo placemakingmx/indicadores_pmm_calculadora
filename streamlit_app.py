@@ -15,7 +15,7 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 # --------------------------------------------------------------------
 st.set_page_config(
     page_title="Indicadores de lugar",
-    page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else None,
+    page_icon="uploads/carita.png" else None,
 )
 
 # --------------------------------------------------------------------
@@ -71,8 +71,11 @@ st.link_button(
 )
 
 st.markdown("---")
-st.subheader("")
-st.markdown("")
+st.subheader("Tutorial:")
+st.markdown("Este GIF te muestra cómo obtener la información desde la página del INEGI.")
+
+# GIF del tutorial entre los separadores
+st.image("uploads/tutorial.gif", use_column_width=True)
 st.markdown("---")
 
 # --------------------------------------------------------------------
