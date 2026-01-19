@@ -23,3 +23,17 @@ h1, h2, h3, h4, h5, h6,
     font-weight: 400 !important;
     line-height: 1.2 !important;
 }
+
+/* Forzar botones al color del tema */
+.stButton > button {
+    background-color: #00FF00 !important;
+    border-color: #00FF00 !important;
+    color: white !important;
+}
+
+/* Hover un poco más oscuro */
+.stButton > button:hover {
+    background-color: #00CC00 !important;
+    border-color: #00CC00 !important;
+}
+
