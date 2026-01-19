@@ -176,3 +176,10 @@ h1, h2, h3, h4, h5, h6,
 .stTable tbody tr:hover td {
   background-color: rgba(254, 209, 65, 0.12);
 }
+
+/* Quitar outline rojo y usar borde + glow azul en TODOS los text_area */
+.stTextArea textarea:focus {
+    outline: none !important;                 /* quita el outline rojo */  /* @6 @11 */
+    border-color: var(--space) !important;     /* color del borde al enfocar */
+    box-shadow: 0 0 0 1px var(--space) !important; /* “marco” interno space */  /* @2 @5 */
+}
