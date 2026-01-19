@@ -54,7 +54,10 @@ h1, h2, h3, h4, h5, h6,
     color: var(--white) !important;
     box-shadow: none !important;
 }
-
+/* Botones de enlace (st.link_button) */
+.stLinkButton > button,
+.stLinkButton > a {
+    border-radius: 8 rem !important;   
 }
 
 /* Hover de botones */
