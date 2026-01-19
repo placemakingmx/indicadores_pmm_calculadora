@@ -84,56 +84,51 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
+/* ============================ RADIO: USAR DIRECTAMENTE input:checked ============================ */
 
-/* ============================ RADIO: RECONSTRUIR EL CÍRCULO ============================ */
+/* Quitamos la apariencia de sistema y dibujamos nuestro círculo */
+.stRadio input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 
-/* 1) Neutralizar lo que dibuja Streamlit/BaseWeb dentro del radio */
-.stRadio [data-baseweb="radio"] * {
-    background: transparent !important;
-    box-shadow: none !important;
-    border-color: transparent !important;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
+  border: 2px solid var(--blue);            /* aro azul cuando NO está seleccionado */
+  background-color: var(--cream);           /* interior del color de fondo */
+  box-shadow: none!important;
+  outline: none!important;
+
+  margin-right: 0.5rem;                     /* espacio respecto al texto */
+  cursor: pointer;
 }
 
-/* 2) Asegurarnos de que el contenedor del radio puede usar pseudo-elementos */
-.stRadio [data-baseweb="radio"] {
-    position: relative;
-    padding-left: 1.6rem;            /* espacio para el círculo a la izquierda del texto */
+/* Estado seleccionado: aro índigo + puntito índigo en el centro */
+.stRadio input[type="radio"]:checked {
+  border-color: var(--indigo);              /* cambiamos el aro a índigo */
+
+  /* Puntito del centro hecho con un radial-gradient */
+  background:
+    radial-gradient(
+      circle,
+      var(--indigo) 0,                      /* centro índigo */
+      var(--indigo) 45%,                    /* hasta ~45% radio índigo */
+      var(--cream) 46%,                     /* a partir de ahí color de fondo */
+      var(--cream) 100%
+    );
 }
 
-/* 3) Aro exterior del círculo (estado normal: azul) */
-.stRadio [data-baseweb="radio"]::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--blue) !important;   /* aro azul */
-    background-color: var(--cream) !important;  /* fondo interior, puedes usar var(--white) si prefieres */
-    box-shadow: none !important;
+/* Seguridad extra: nada de halos ni sombras raras (incluido foco) */
+.stRadio input[type="radio"]:focus,
+.stRadio input[type="radio"]:focus-visible {
+  outline: none!important;
+  box-shadow: none!important;
 }
 
-/* 4) Aro exterior cuando está seleccionado: índigo */
-.stRadio [data-baseweb="radio"][aria-checked="true"]::before {
-    border-color: var(--indigo) !important;
-}
-
-/* 5) Puntito interior (solo cuando está seleccionado) */
-.stRadio [data-baseweb="radio"]::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(4px, -50%);  /* centra el punto dentro del aro (4px = (16-8)/2) */
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: transparent !important;    /* por defecto invisible */
-}
-
-/* Puntito interior visible y del color que quieras (índigo) cuando está seleccionado */
-.stRadio [data-baseweb="radio"][aria-checked="true"]::after {
-    background-color: var(--indigo) !important;
+/* Por si el navegador sigue intentando usar accent-color en algún sitio */
+.stRadio input[type="radio"],
+.stRadio input[type="radio"]:checked {
+  accent-color: var(--indigo)!important;
 }
