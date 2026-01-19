@@ -3,10 +3,6 @@ import streamlit as st
 import pandas as pd
 import re
 
-st.write("Primary color configurado:", st.get_option("theme.primaryColor"))
-   
-
-
 # --------------------------------------------------------------------
 # Rutas base (para logo y CSS)
 # --------------------------------------------------------------------
