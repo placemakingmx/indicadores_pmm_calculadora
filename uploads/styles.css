@@ -152,7 +152,7 @@ h1, h2, h3, h4, h5, h6,
 
 /* Encabezados */
 .stTable thead tr th {
-  background-color: var(--blue);
+  background-color: var(--indigo);
   color: #ffffff;
   padding: 0.55rem 0.75rem;
   text-align: left;
