@@ -13,10 +13,15 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 # --------------------------------------------------------------------
 # Configuración de la página (título, icono, layout)
 # --------------------------------------------------------------------
+import os
+icon_path = "uploads/carita.png"
+
 st.set_page_config(
-    page_title="Indicadores de lugar",
-    page_icon="uploads/carita.png" else None,
+    page_title="Indicadores del lugar",
+    page_icon=icon_path if os.path.exists(icon_path) else None,
+    layout="centered",
 )
+
 
 # --------------------------------------------------------------------
 # Ocultar menú y footer de Streamlit
