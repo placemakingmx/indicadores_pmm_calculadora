@@ -47,19 +47,25 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.2 !important;
 }
 
-/* 7. Botones principales (st.button y submit) */
-.stButton > button {
-  background-color: var(--blue) !important;
-  border-radius: 0 !important;
-  border: 1px solid var(--blue) !important;
-  color: var(--white) !important;
-  box-shadow: none !important;
+/* 7. Botones principales (st.button, st.link_button, submit) */
+.stButton > button,
+.stLinkButton > button,
+.stLinkButton > a {
+    background-color: var(--blue)!important;
+    border-radius: 0!important;
+    border: 1px solid var(--blue)!important;
+    color: var(--white)!important;
+    box-shadow: none!important;
+    text-decoration: none!important; /* para el <a> del link_button */
 }
 
 /* Hover de botones */
-.stButton > button:hover {
-  background-color: var(--indigo) !important;
-  border-color: var(--indigo) !important;
+.stButton > button:hover,
+.stLinkButton > button:hover,
+.stLinkButton > a:hover {
+    background-color: var(--indigo)!important;
+    border-color: var(--indigo)!important;
+    color: var(--white)!important;
 }
 
 /* 8. Campos de texto y numéricos */
