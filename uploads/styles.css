@@ -51,7 +51,7 @@ h1, h2, h3, h4, h5, h6,
 .stButton > button,
 .stLinkButton > button,
 .stLinkButton > a {
-    background-color: var(--blue)!important;
+    background-color: var(--indigo)!important;
     border-radius: 0!important;
     border: 1px solid var(--blue)!important;
     color: var(--white)!important;
