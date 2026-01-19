@@ -126,3 +126,23 @@ h1, h2, h3, h4, h5, h6,
     accent-color: var(--indigo) !important;
 }
 
+/* ============================ OCULTAR COMPLETAMENTE EL CÍRCULO DEL RADIO ============================ */
+
+/* Oculta el icono/círculo del radio */
+.stRadio [data-baseweb="radio"] > div:first-child {
+    display: none !important;
+}
+
+/* Asegura que el texto quede alineado sin huecos */
+.stRadio [data-baseweb="radio"] {
+    display: flex;
+    align-items: center;
+    gap: 0 !important;
+}
+
+/* Elimina posibles márgenes que dejen un espacio donde estaba el círculo */
+.stRadio [data-baseweb="radio"] > div:last-child {
+    margin-left: 0 !important;
+}
+
+
