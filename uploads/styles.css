@@ -126,12 +126,6 @@ h1, h2, h3, h4, h5, h6,
     background-color: transparent !important;
 }
 
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-
 /* =========================
    ESTILO UNIFICADO PARA st.dataframe
    ========================= */
