@@ -131,4 +131,73 @@ hide_streamlit_style = """
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             </style>
+
+/* === Tablas (st.table y tablas HTML) === */
+
+/* Contenedor general de tablas de Streamlit */
+.stTable {
+  border-radius: 0.5rem;
+  overflow: hidden;           /* respeta el border-radius */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: var(--bg, #f7f4ec);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Tabla estática de Streamlit */
+.stTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+/* Tablas HTML que generes con st.markdown */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  background-color: var(--bg, #f7f4ec);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Encabezados */
+.stTable th,
+table thead th {
+  background-color: var(--blue, #005f73);
+  color: #ffffff;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Celdas */
+.stTable td,
+table td {
+  padding: 0.55rem 0.75rem;
+  color: var(--text, #222222);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Filas alternadas */
+.stTable tr:nth-child(even) td,
+table tbody tr:nth-child(even) td {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+/* Hover de filas (interacción consistente con botones/inputs) */
+.stTable tr:hover td,
+table tbody tr:hover td {
+  background-color: rgba(238, 155, 0, 0.10); /* var(--sunglow) translúcido */
+}
+
+/* Alinear números a la derecha, si usas la clase .col-num en <td> */
+td.col-num {
+  text-align: right;
+}
+
+/* Bordes redondeados para tablas dentro de contenedores */
+.stTable > div:first-child,
+
           
