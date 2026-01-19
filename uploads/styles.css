@@ -132,84 +132,72 @@ hide_streamlit_style = """
             footer {visibility: hidden;}
             </style>
 
-/* ============================
-   TABLAS: st.dataframe
-   ============================ */
+/* =========================
+   ESTILO UNIFICADO PARA st.dataframe
+   ========================= */
 
-/* Contenedor principal del dataframe */
+/* Contenedor principal de cualquier st.dataframe */
 div[data-testid="stDataFrame"] {
   border-radius: 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background-color: var(--bg, #f7f4ec);
-  overflow: hidden; /* respeta el border-radius */
+  overflow: hidden;              /* respeta border-radius */
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* Quita el borde gris que pone Streamlit por defecto */
+/* Quitar bordes o fondos raros internos */
 div[data-testid="stDataFrame"] > div {
   border: none !important;
+  background: transparent !important;
 }
 
-/* Wrapper interno de Ag-Grid */
-div[data-testid="stDataFrame"] .ag-root-wrapper {
-  border: none !important;
-  border-radius: 0.75rem;
+/* La tabla HTML que pinta el DataFrame */
+div[data-testid="stDataFrame"] table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
   background-color: var(--bg, #f7f4ec);
 }
 
-/* CABECERA (encabezados de columna) */
-div[data-testid="stDataFrame"] .ag-header {
+/* Encabezados de columna */
+div[data-testid="stDataFrame"] thead tr th {
   background-color: var(--blue, #005f73);
   color: #ffffff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-div[data-testid="stDataFrame"] .ag-header-cell-label {
-  justify-content: flex-start;          /* alinear texto a la izquierda */
+  padding: 0.55rem 0.75rem;
+  text-align: left;
   font-weight: 600;
-  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-/* Celdas de la cabecera */
-div[data-testid="stDataFrame"] .ag-header-cell,
-div[data-testid="stDataFrame"] .ag-header-group-cell {
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* FILAS Y CELDAS */
-div[data-testid="stDataFrame"] .ag-center-cols-container,
-div[data-testid="stDataFrame"] .ag-center-cols-viewport {
-  font-size: 0.9rem;
+/* Celdas del cuerpo */
+div[data-testid="stDataFrame"] tbody tr td {
+  padding: 0.45rem 0.75rem;
   color: var(--text, #222222);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* Fondo alternado de filas */
-div[data-testid="stDataFrame"] .ag-row:nth-child(even) {
+/* Filas alternadas */
+div[data-testid="stDataFrame"] tbody tr:nth-child(even) td {
   background-color: rgba(0, 0, 0, 0.015);
 }
 
-/* Hover de fila (coherente con el resto de la UI) */
-div[data-testid="stDataFrame"] .ag-row-hover {
-  background-color: rgba(238, 155, 0, 0.10) !important;  /* var(--sunglow) translúcido */
+/* Hover de fila (coherente con tu amarillo sunglow) */
+div[data-testid="stDataFrame"] tbody tr:hover td {
+  background-color: rgba(238, 155, 0, 0.10); /* var(--sunglow) translúcido */
 }
 
-/* Borde entre celdas muy sutil */
-div[data-testid="stDataFrame"] .ag-cell {
-  border-right: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-/* Alinear números a la derecha si quieres usar esta clase en tu DataFrame (opcional) */
-div[data-testid="stDataFrame"] .col-num {
+/* Opcional: números alineados a la derecha si luego les pones esta clase */
+div[data-testid="stDataFrame"] td.col-num {
   text-align: right;
 }
 
-/* Scrollbars un poco más discretos dentro del dataframe (opcional) */
+/* Scrollbars discretos dentro de las tablas (opcional) */
 div[data-testid="stDataFrame"] ::-webkit-scrollbar {
   height: 8px;
   width: 8px;
 }
 
 div[data-testid="stDataFrame"] ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 }
