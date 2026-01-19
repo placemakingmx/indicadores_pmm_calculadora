@@ -1,0 +1,8 @@
+[theme]
+base = "light"
+primaryColor = "#00FF00"       # verde para notar el cambio
+backgroundColor = "white"
+secondaryBackgroundColor = "#F5F5F5"
+textColor = "black"
+baseRadius = 0
+buttonRadius = 0
