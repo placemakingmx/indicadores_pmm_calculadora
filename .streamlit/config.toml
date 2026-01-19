@@ -10,3 +10,6 @@ textColor = "#0D0D52"             # Space (texto principal)
 # Opcional: bordes rectos
 baseRadius = 0
 buttonRadius = 0
+
+[client]
+toolbarMode = "viewer"
