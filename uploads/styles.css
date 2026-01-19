@@ -116,13 +116,13 @@ h1, h2, h3, h4, h5, h6,
     border-radius: 50% !important;
     box-shadow: none !important;
 }
-
-/* 4) Puntito de la opción SELECCIONADA: clase st-by -> índigo */
-.stRadio [data-baseweb="radio"] > div:first-child > div.st-by {
+/* 4) Puntito de la opción SELECCIONADA: clase st-bd -> índigo */
+.stRadio [data-baseweb="radio"] > div:first-child > div.st-bd {
     background-color: var(--indigo) !important;
 }
 
-/* 5) Puntito de la opción NO seleccionada: clase st-bd -> transparente */
-.stRadio [data-baseweb="radio"] > div:first-child > div.st-bd {
+/* 5) Puntito de la opción NO seleccionada: clase st-by -> transparente */
+.stRadio [data-baseweb="radio"] > div:first-child > div.st-by {
     background-color: transparent !important;
 }
+
