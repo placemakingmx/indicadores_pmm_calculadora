@@ -110,41 +110,32 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 0 !important;
   border: none !important;
 }
-
-/* ============================ RADIO: "¿Qué quieres consultar?" ============================ */
-
-/* Contenedor del grupo de radios */
-.stRadio [role="radiogroup"] {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-/* Cada opción de radio en estado normal */
-.stRadio [role="radio"] {
-    border-radius: 0 !important;
-    border: 1px solid var(--blue) !important;      /* #0047BB */
-    background-color: var(--white) !important;     /* #FFFFFF */
-    color: var(--space) !important;                /* #0D0D52 */
-    padding: 0.35rem 0.75rem;
+/* ============================ FIJAR CÍRCULO DEL st.radio ============================ */
+/* Quitar outline/halo rojo del radio interno (BaseWeb) */
+.stRadio [data-baseweb="radio"] {
+    outline: none !important;
     box-shadow: none !important;
 }
 
-/* Hover sobre las opciones */
-.stRadio [role="radio"]:hover {
-    border-color: var(--indigo) !important;        /* #685BC7 */
+/* Forzar borde del círculo exterior a azul por defecto */
+.stRadio [data-baseweb="radio"] > div:first-child {
+    border: 2px solid var(--blue) !important;  /* borde azul */
+    border-radius: 50% !important;
+    box-shadow: none !important;
 }
 
-/* Opción seleccionada */
-.stRadio [role="radio"][aria-checked="true"] {
+/* Cuando está seleccionado: borde índigo y relleno índigo (puedes cambiar el relleno si quieres blanco) */
+.stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
     border-color: var(--indigo) !important;
-    background-color: var(--sunglow) !important;   /* #FED141 */
-    color: var(--space) !important;
+    background-color: var(--indigo) !important;
 }
 
-/* Título de la pregunta (label de st.radio) */
-.stRadio > label {
-    color: var(--space) !important;
-    font-weight: 600;
+/* En muchos casos hay un div interior que hace de “puntito”; lo mantenemos blanco */
+.stRadio [data-baseweb="radio"] > div:first-child > div {
+    background-color: var(--white) !important;
 }
 
+/* Red de seguridad: dentro de stRadio no queremos sombras ni bordes rojos de ningún tipo */
+.stRadio * {
+    box-shadow: none !important;
+}
