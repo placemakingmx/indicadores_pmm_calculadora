@@ -84,25 +84,45 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
+/* ===================== RADIO STREAMLIT: ARO AZUL + PUNTO ÍNDIGO CONTROLADO ===================== */
 
-/* ===================== RADIO STREAMLIT: CÍRCULO AZUL + PUNTO ÍNDIGO ===================== */
+/* 1) Ocultar el radio nativo para que no meta colores (accent-color, etc.) */
+.stRadio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
 
-/* 1) Aro exterior: hacemos que el primer div dentro del label sea un círculo con borde azul */
+/* 2) Aro exterior: primer div dentro del label es el círculo contenedor */
 .stRadio [data-baseweb="radio"] > div:first-child {
-  border-radius: 50% !important;
-  border: 2px solid var(--blue) !important;  /* aro azul */
+    /* círculo exterior */
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--blue) !important;         /* aro azul SIEMPRE */
+    background-color: var(--cream) !important;        /* fondo interior del aro */
+    
+    /* centramos el puntito */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none !important;
 }
 
-/* 2) Puntito interior: usamos las clases que Streamlit genera para seleccionado / no seleccionado */
-
-/* Opción seleccionada: inner div con clase st-by -> puntito índigo */
-.stRadio [data-baseweb="radio"] .st-by {
-  border-radius: 50% !important;
-  background-color: var(--indigo) !important;  /* color del punto cuando está seleccionado */
+/* 3) Puntito interior: segundo div dentro del contenedor (st-by / st-bd) */
+.stRadio [data-baseweb="radio"] > div:first-child > div {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    box-shadow: none !important;
 }
 
-/* Opción NO seleccionada: inner div con clase st-bd -> puntito transparente */
-.stRadio [data-baseweb="radio"] .st-bd {
-  border-radius: 50% !important;
-  background-color: transparent !important;   /* sin punto cuando no está seleccionado */
+/* 4) Puntito de la opción SELECCIONADA: clase st-by -> índigo */
+.stRadio [data-baseweb="radio"] > div:first-child > div.st-by {
+    background-color: var(--indigo) !important;
+}
+
+/* 5) Puntito de la opción NO seleccionada: clase st-bd -> transparente */
+.stRadio [data-baseweb="radio"] > div:first-child > div.st-bd {
+    background-color: transparent !important;
 }
