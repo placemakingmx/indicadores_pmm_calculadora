@@ -85,46 +85,6 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 0;
 }
 
-/* ============================ FIJAR CÍRCULO DEL st.radio ============================ */
-/* Quitar outline/halo rojo del radio interno (BaseWeb) */
-.stRadio [data-baseweb="radio"] {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Forzar borde del círculo exterior a azul por defecto */
-.stRadio [data-baseweb="radio"] > div:first-child {
-    border: 2px solid var(--blue) !important;  /* borde azul */
-    border-radius: 50% !important;
-    box-shadow: none !important;
-}
-
-/* Cuando está seleccionado: borde índigo y relleno índigo (puedes cambiar el relleno si quieres blanco) */
-.stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
-    border-color: var(--indigo) !important;
-    background-color: var(--indigo) !important;
-}
-
-/* En muchos casos hay un div interior que hace de “puntito”; lo mantenemos blanco */
-.stRadio [data-baseweb="radio"] > div:first-child > div {
-    background-color: var(--white) !important;
-}
-
-/* Red de seguridad: dentro de stRadio no queremos sombras ni bordes rojos de ningún tipo */
-.stRadio * {
-    box-shadow: none !important;
-}
-
-/* ============================ FORZAR COLOR DEL INPUT RADIO NATIVO ============================ */
-.stRadio input[type="radio"] {
-    /* Color del círculo (borde + relleno) del radio nativo */
-    accent-color: var(--indigo) !important;  /* usa indigo en lugar del rojo por defecto */
-}
-
-/* Opcional: si quieres que al pasar el ratón también se mantenga el mismo color */
-.stRadio input[type="radio"]:hover {
-    accent-color: var(--indigo) !important;
-}
 /* ============================ RADIO: RECONSTRUIR EL CÍRCULO ============================ */
 
 /* 1) Neutralizar lo que dibuja Streamlit/BaseWeb dentro del radio */
