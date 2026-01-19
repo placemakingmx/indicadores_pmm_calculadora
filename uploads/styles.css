@@ -125,43 +125,55 @@ h1, h2, h3, h4, h5, h6,
 .stRadio input[type="radio"]:hover {
     accent-color: var(--indigo) !important;
 }
+/* ============================ RADIO: RECONSTRUIR EL CÍRCULO ============================ */
 
-/* ============================ OCULTAR COMPLETAMENTE EL CÍRCULO DEL RADIO ============================ */
-
-/* Oculta el icono/círculo del radio */
-.stRadio [data-baseweb="radio"] > div:first-child {
-    display: none !important;
+/* 1) Neutralizar lo que dibuja Streamlit/BaseWeb dentro del radio */
+.stRadio [data-baseweb="radio"] * {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
 }
 
-/* Asegura que el texto quede alineado sin huecos */
+/* 2) Asegurarnos de que el contenedor del radio puede usar pseudo-elementos */
 .stRadio [data-baseweb="radio"] {
-    display: flex;
-    align-items: center;
-    gap: 0 !important;
+    position: relative;
+    padding-left: 1.6rem;            /* espacio para el círculo a la izquierda del texto */
 }
 
-/* Elimina posibles márgenes que dejen un espacio donde estaba el círculo */
-.stRadio [data-baseweb="radio"] > div:last-child {
-    margin-left: 0 !important;
+/* 3) Aro exterior del círculo (estado normal: azul) */
+.stRadio [data-baseweb="radio"]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--blue) !important;   /* aro azul */
+    background-color: var(--cream) !important;  /* fondo interior, puedes usar var(--white) si prefieres */
+    box-shadow: none !important;
 }
 
-/* Ejemplo de estilo tipo "chip" para el st.radio */
-.stRadio [role="radiogroup"] [role="radio"] {
-    border-radius: 999px;
-    padding: 0.25rem 0.75rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+/* 4) Aro exterior cuando está seleccionado: índigo */
+.stRadio [data-baseweb="radio"][aria-checked="true"]::before {
+    border-color: var(--indigo) !important;
 }
 
-/* No seleccionado */
-.stRadio [role="radiogroup"] [role="radio"][aria-checked="false"] {
-    background-color: transparent;
-    color: var(--space);
+/* 5) Puntito interior (solo cuando está seleccionado) */
+.stRadio [data-baseweb="radio"]::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(4px, -50%);  /* centra el punto dentro del aro (4px = (16-8)/2) */
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: transparent;    /* por defecto invisible */
 }
 
-/* Seleccionado */
-.stRadio [role="radiogroup"] [role="radio"][aria-checked="true"] {
-    background-color: var(--sunglow);
-    color: var(--space);
+/* Puntito interior visible y del color que quieras (índigo) cuando está seleccionado */
+.stRadio [data-baseweb="radio"][aria-checked="true"]::after {
+    background-color: var(--indigo) !important;
 }
-
