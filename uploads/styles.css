@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5, h6,
 .stLinkButton > a {
     background-color: var(--space)!important;
     border-radius: 0!important;
-    border: 1px solid var(--blue)!important;
+    border: 1px solid var(--space)!important;
     color: var(--white)!important;
     box-shadow: none!important;
     text-decoration: none!important; /* para el <a> del link_button */
@@ -176,11 +176,33 @@ h1, h2, h3, h4, h5, h6,
 .stTable tbody tr:hover td {
   background-color: rgba(254, 209, 65, 0.12);
 }
+/* ================= TEXT AREA: QUITAR MARCO ROJO ================= */
 
-/* Solo el text_area de "Pega aquí el texto con los datos de población:" */
-.stTextArea textarea[aria-label="Pega aquí el texto con los datos de población:"]:focus {
-    outline: none !important;
-    border-color: var(--blue) !important;
-    box-shadow: 0 0 0 1px var(--blue) !important;
+/* Contenedor BaseWeb del text_area (cuadro completo) */
+.stTextArea div[data-baseweb="textarea"] {
+    border-radius: 0.5rem !important;              /* opcional, por estética */
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: none !important;                   /* quita sombras por defecto */
 }
+
+/* Cuando el text_area tiene foco (focus-within) */
+.stTextArea div[data-baseweb="textarea"]:focus-within {
+    border-color: var(--blue) !important;          /* tu azul corporativo */
+    box-shadow: 0 0 0 1px var(--blue) !important;  /* halo azul en vez de rojo */
+}
+/* El propio textarea por dentro */
+.stTextArea textarea {
+    border: none !important;        /* el borde lo maneja el contenedor */
+    box-shadow: none !important;    /* quita cualquier sombra interna */
+    outline: none !important;       /* sin outline por defecto */
+}
+
+/* Por si acaso, en estado focus (aunque outline ya está en none) */
+.stTextArea textarea:focus {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+
 
