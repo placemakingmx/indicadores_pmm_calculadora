@@ -10,12 +10,6 @@ BASE_DIR = Path(__file__).parent
 LOGO_PATH = BASE_DIR / "uploads" / "logo.png"
 CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-
 # --------------------------------------------------------------------
 # Configuración de la página (título, icono, layout)
 # --------------------------------------------------------------------
@@ -25,18 +19,26 @@ st.set_page_config(
 )
 
 # --------------------------------------------------------------------
+# Ocultar menú y footer de Streamlit
+# --------------------------------------------------------------------
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+# --------------------------------------------------------------------
 # Cargar estilos personalizados (styles.css)
 # --------------------------------------------------------------------
 def cargar_css_local(css_path: Path) -> None:
     if css_path.exists():
         with open(css_path, "r", encoding="utf-8") as f:
             css = f.read()
-        # .stApp es el contenedor principal de la app
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-
 cargar_css_local(CSS_PATH)
-
 
 # --------------------------------------------------------------------
 # Logo en la parte superior
@@ -44,23 +46,21 @@ cargar_css_local(CSS_PATH)
 if LOGO_PATH.exists():
     st.image(str(LOGO_PATH), width=170)  # ajusta el ancho si quieres
 
-
 # --------------------------------------------------------------------
 # Configuración general y descripción inicial
 # --------------------------------------------------------------------
 st.title("Indicadores de lugar")
-
 st.markdown(
     """
-Utiliza esta herramienta para obtener los valores de **Porcentaje de diversidad** y **Puntos de accesibilidad y conexión**
-a partir de los datos del INEGI: **“Espacio y datos de México”**.
+Utiliza esta herramienta para obtener los valores de **Porcentaje de diversidad** y
+**Puntos de accesibilidad y conexión** a partir de los datos del INEGI:
+**"Espacio y datos de México"**.
 
 **Pasos sugeridos:**
-
 1. Haz clic en el botón para abrir el mapa de INEGI en una nueva ventana.
 2. Usa el buscador o las coordenadas (si las tienes) para ubicar el lugar.
 3. Elige el área a consultar (por ejemplo, una manzana, colonia o polígono de interés).
-4. Haz clic en **“Consultar”** en la interfaz del mapa para obtener los datos.
+4. Haz clic en **"Consultar"** en la interfaz del mapa para obtener los datos.
 """
 )
 
@@ -72,14 +72,8 @@ st.link_button(
 
 st.markdown("---")
 st.subheader("")
-st.markdown(
-    ""
-)
-# Cuando tengas el GIF, podrás reemplazar la línea anterior por algo como:
-# st.image("ruta/al/gif_referencia.gif", caption="Cómo consultar el área en el mapa de INEGI", use_column_width=True)
-
+st.markdown("")
 st.markdown("---")
-
 
 # --------------------------------------------------------------------
 # Selector de tipo de consulta
@@ -88,7 +82,6 @@ opcion = st.radio(
     "¿Qué quieres consultar?",
     ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
 )
-
 
 # --------------------------------------------------------------------
 # Definición de etiquetas y funciones comunes (Sección diversidad)
@@ -107,8 +100,7 @@ ETIQUETAS = [
 
 def extraer_valores(texto: str):
     """
-    Busca en el texto cada etiqueta y extrae el entero
-    (permitiendo separadores de miles con comas).
+    Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
     Devuelve un dict con claves = códigos (PT, PF...) y valores = int.
     """
     valores = {}
@@ -131,7 +123,6 @@ def extraer_valores(texto: str):
 # --------------------------------------------------------------------
 def seccion_diversidad():
     st.header("Porcentaje de diversidad (MNNAPAM)")
-
     st.markdown(
         """
 Pega el bloque de texto que contenga, con estas etiquetas **exactas**
@@ -169,9 +160,7 @@ y se convertirán automáticamente a enteros sin comas.
     if st.button("Calcular indicadores de diversidad"):
         texto_limpio = (texto or "").strip()
         if not texto_limpio:
-            st.error(
-                "Por favor, copia y pega el bloque de texto con los datos de población."
-            )
+            st.error("Por favor, copia y pega el bloque de texto con los datos de población.")
             return
 
         valores = extraer_valores(texto_limpio)
@@ -185,10 +174,7 @@ y se convertirán automáticamente a enteros sin comas.
                 "'Población total' hasta 'Población con discapacidad'."
             )
             if faltantes:
-                st.info(
-                    "Variables faltantes o mal detectadas: "
-                    + ", ".join(faltantes)
-                )
+                st.info("Variables faltantes o mal detectadas: " + ", ".join(faltantes))
             return
 
         PT = valores["PT"]
@@ -208,7 +194,6 @@ y se convertirán automáticamente a enteros sin comas.
         # Fórmula: (PF + NNA*(PM/PT) + PAM*(PM/PT)) / PT
         mnn_pam = (PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT
 
-        # Texto explicativo
         st.markdown(
             f"""
 La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
@@ -218,7 +203,6 @@ Copia y pega el siguiente valor en el cuestionario.
 """
         )
 
-        # Métrica (fácil de copiar y pegar)
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
 
         # Construcción de la tabla
@@ -229,6 +213,7 @@ Copia y pega el siguiente valor en el cuestionario.
                 porcentaje = 100.0
             else:
                 porcentaje = (valor_abs / PT) * 100.0
+
             filas.append(
                 {
                     "Código": codigo,
@@ -273,32 +258,28 @@ INDICADORES_ACCESO = [
 
 def parsear_tabla_accesibilidad(texto: str):
     """
-    Busca en el texto cada indicador de accesibilidad/conexión
-    y extrae los 5 enteros (En todas, En alguna, En ninguna,
-    No especificado, No aplica), permitiendo separadores de miles
-    con comas.
+    Busca en el texto cada indicador de accesibilidad/conexión y extrae los 5 enteros
+    (En todas, En alguna, En ninguna, No especificado, No aplica),
+    permitiendo separadores de miles con comas.
 
     Devuelve un dict:
     {
-      "RDC": {
-        "codigo": "RDC",
-        "nombre": "...",
-        "en_todas": int,
-        "en_alguna": int,
-        "en_ninguna": int,
-        "no_especificado": int,
-        "no_aplica": int,
-      },
-      ...
+        "RDC": {
+            "codigo": "RDC",
+            "nombre": "...",
+            "en_todas": int,
+            "en_alguna": int,
+            "en_ninguna": int,
+            "no_especificado": int,
+            "no_aplica": int,
+        },
+        ...
     }
     """
     valores = {}
 
     for nombre, codigo in INDICADORES_ACCESO:
         # Patrón: Nombre + 5 números (con o sin comas) separados por espacios
-        # Ejemplo:
-        # "Recubrimiento de la calle 29 18 0 0 0"
-        # o "Recubrimiento de la calle 1,029 18 0 0 0"
         patron = rf"^{re.escape(nombre)}\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$"
         encontrado = False
 
@@ -309,7 +290,6 @@ def parsear_tabla_accesibilidad(texto: str):
 
             m = re.match(patron, linea)
             if m:
-                # Quitar comas de cada número antes de convertir
                 en_todas = int(m.group(1).replace(",", ""))
                 en_alguna = int(m.group(2).replace(",", ""))
                 en_ninguna = int(m.group(3).replace(",", ""))
@@ -375,10 +355,9 @@ def calcular_TM(valores_indicadores: dict) -> int:
 def calcular_puntajes_acceso(valores_indicadores: dict):
     """
     Calcula TM y los puntajes por indicador, de acuerdo con las fórmulas especificadas.
-
     Devuelve (puntajes, TM), donde:
-      - puntajes: dict {codigo: valor_float}
-      - TM: entero con el total de manzanas
+    - puntajes: dict {codigo: valor_float}
+    - TM: entero con el total de manzanas
     """
     TM = calcular_TM(valores_indicadores)
 
@@ -438,21 +417,20 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
 # --------------------------------------------------------------------
 def seccion_accesibilidad_conexion():
     st.header("Puntos de accesibilidad y conexión")
-
     st.markdown(
         """
 Pega la tabla de indicadores de accesibilidad y conexión, con los siguientes encabezados
 de columna (en este orden):
 
-Nombre del indicador: En todas - En alguna - En ninguna - No especificado - No aplica
+Nombre del indicador  En todas  En alguna  En ninguna  No especificado  No aplica
 
 Los valores pueden tener separadores de miles con coma (por ejemplo, 1,029),
 y se convertirán automáticamente a enteros sin comas.
 
 Ejemplo de filas (los números son solo ilustrativos, pero el texto del nombre debe ser exacto):
 
-Recubrimiento de la calle 29 18 0 0 0  
-Rampa para silla de ruedas 3 14 30 0 0  
+Recubrimiento de la calle 29 18 0 0 0
+Rampa para silla de ruedas 3 14 30 0 0
 
 Se ignorará cualquier otra línea, como la cabecera o la fecha de actualización.
 """
@@ -491,9 +469,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
     if st.button("Calcular puntos de accesibilidad y conexión"):
         texto_limpio = (texto_tabla or "").strip()
         if not texto_limpio:
-            st.error(
-                "Por favor, copia y pega la tabla completa de accesibilidad y conexión."
-            )
+            st.error("Por favor, copia y pega la tabla completa de accesibilidad y conexión.")
             return
 
         # 1) Parsear tabla
@@ -533,6 +509,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                     "No aplica": info["no_aplica"],
                 }
             )
+
         df_valores = pd.DataFrame(filas_valores)
         st.subheader("Valores detectados en la tabla")
         st.dataframe(df_valores, use_container_width=True)
@@ -596,6 +573,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                     "Puntaje (2 decimales)": f"{puntajes[codigo]:.2f}",
                 }
             )
+
         df_puntajes = pd.DataFrame(filas_puntajes)
         st.subheader("Puntaje por indicador")
         st.dataframe(df_puntajes, use_container_width=True)
