@@ -67,9 +67,9 @@ st.link_button(
 )
 
 st.markdown("---")
-st.subheader("Referencia visual")
+st.subheader("")
 st.markdown(
-    "_Aquí se mostrará un GIF de referencia sobre cómo usar el mapa de INEGI (placeholder)._"
+    ""
 )
 # Cuando tengas el GIF, podrás reemplazar la línea anterior por algo como:
 # st.image("ruta/al/gif_referencia.gif", caption="Cómo consultar el área en el mapa de INEGI", use_column_width=True)
