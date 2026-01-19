@@ -125,33 +125,27 @@ h1, h2, h3, h4, h5, h6,
   background-color: transparent !important;
 }
 
-/* ========================= ESTILO UNIFICADO PARA st.dataframe ========================= */
+/* ======================= ESTILO PARA TABLAS st.table ======================= */
 
-/* Contenedor principal de cualquier st.dataframe */
-div[data-testid="stDataFrame"] {
+/* Contenedor principal de st.table */
+.stTable {
   border-radius: 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: #f7f4ec;
-  overflow: hidden; /* respeta el border-radius */
+  background-color: var(--offwhite);
+  overflow: hidden;
   font-family: 'Poppins', sans-serif;
 }
 
-/* Quitar bordes o fondos raros internos */
-div[data-testid="stDataFrame"] > div {
-  border: none !important;
-  background: transparent !important;
-}
-
-/* La tabla HTML que pinta el DataFrame */
-div[data-testid="stDataFrame"] table {
+/* Tabla interna */
+.stTable table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
-  background-color: #f7f4ec;
+  background-color: var(--offwhite);
 }
 
-/* Encabezados de columna */
-div[data-testid="stDataFrame"] thead tr th {
+/* Encabezados */
+.stTable thead tr th {
   background-color: var(--blue);
   color: #ffffff;
   padding: 0.55rem 0.75rem;
@@ -161,29 +155,18 @@ div[data-testid="stDataFrame"] thead tr th {
 }
 
 /* Celdas del cuerpo */
-div[data-testid="stDataFrame"] tbody tr td {
+.stTable tbody tr td {
   padding: 0.45rem 0.75rem;
   color: var(--space);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 /* Filas alternadas */
-div[data-testid="stDataFrame"] tbody tr:nth-child(even) td {
+.stTable tbody tr:nth-child(even) td {
   background-color: rgba(0, 0, 0, 0.015);
 }
 
-/* Hover de fila (amarillo sunglow translúcido) */
-div[data-testid="stDataFrame"] tbody tr:hover td {
-  background-color: rgba(254, 209, 65, 0.10);
-}
-
-/* Scrollbars discretos dentro de las tablas (opcional) */
-div[data-testid="stDataFrame"] ::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-div[data-testid="stDataFrame"] ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
+/* Hover de fila (sunglow translúcido) */
+.stTable tbody tr:hover td {
+  background-color: rgba(254, 209, 65, 0.12);
 }
