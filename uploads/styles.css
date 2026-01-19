@@ -126,72 +126,48 @@ h1, h2, h3, h4, h5, h6,
     background-color: transparent !important;
 }
 
-/* =========================
-   ESTILO UNIFICADO PARA st.dataframe
-   ========================= */
+/* ======================= ESTILO PARA TABLAS st.table ======================= */
 
-/* Contenedor principal de cualquier st.dataframe */
-div[data-testid="stDataFrame"] {
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: var(--bg, #f7f4ec);
-  overflow: hidden;              /* respeta border-radius */
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+/* contenedor de las tablas */
+.stTable {
+    border-radius: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: var(--offwhite);
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* Quitar bordes o fondos raros internos */
-div[data-testid="stDataFrame"] > div {
-  border: none !important;
-  background: transparent !important;
+/* tabla interna */
+.stTable table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background-color: var(--offwhite);
 }
 
-/* La tabla HTML que pinta el DataFrame */
-div[data-testid="stDataFrame"] table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-  background-color: var(--bg, #f7f4ec);
+/* encabezados */
+.stTable thead tr th {
+    background-color: var(--blue);
+    color: #ffffff;
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-/* Encabezados de columna */
-div[data-testid="stDataFrame"] thead tr th {
-  background-color: var(--blue, #005f73);
-  color: #ffffff;
-  padding: 0.55rem 0.75rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+/* celdas del cuerpo */
+.stTable tbody tr td {
+    padding: 0.45rem 0.75rem;
+    color: var(--space);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* Celdas del cuerpo */
-div[data-testid="stDataFrame"] tbody tr td {
-  padding: 0.45rem 0.75rem;
-  color: var(--text, #222222);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+/* filas alternadas */
+.stTable tbody tr:nth-child(even) td {
+    background-color: rgba(0, 0, 0, 0.015);
 }
 
-/* Filas alternadas */
-div[data-testid="stDataFrame"] tbody tr:nth-child(even) td {
-  background-color: rgba(0, 0, 0, 0.015);
-}
-
-/* Hover de fila (coherente con tu amarillo sunglow) */
-div[data-testid="stDataFrame"] tbody tr:hover td {
-  background-color: rgba(238, 155, 0, 0.10); /* var(--sunglow) translúcido */
-}
-
-/* Opcional: números alineados a la derecha si luego les pones esta clase */
-div[data-testid="stDataFrame"] td.col-num {
-  text-align: right;
-}
-
-/* Scrollbars discretos dentro de las tablas (opcional) */
-div[data-testid="stDataFrame"] ::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-div[data-testid="stDataFrame"] ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
+/* hover de fila */
+.stTable tbody tr:hover td {
+    background-color: rgba(254, 209, 65, 0.12); /* sunglow translúcido */
 }
