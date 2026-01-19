@@ -110,3 +110,41 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 0 !important;
   border: none !important;
 }
+
+/* ============================ RADIO: "¿Qué quieres consultar?" ============================ */
+
+/* Contenedor del grupo de radios */
+.stRadio [role="radiogroup"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Cada opción de radio en estado normal */
+.stRadio [role="radio"] {
+    border-radius: 0 !important;
+    border: 1px solid var(--blue) !important;      /* #0047BB */
+    background-color: var(--white) !important;     /* #FFFFFF */
+    color: var(--space) !important;                /* #0D0D52 */
+    padding: 0.35rem 0.75rem;
+    box-shadow: none !important;
+}
+
+/* Hover sobre las opciones */
+.stRadio [role="radio"]:hover {
+    border-color: var(--indigo) !important;        /* #685BC7 */
+}
+
+/* Opción seleccionada */
+.stRadio [role="radio"][aria-checked="true"] {
+    border-color: var(--indigo) !important;
+    background-color: var(--sunglow) !important;   /* #FED141 */
+    color: var(--space) !important;
+}
+
+/* Título de la pregunta (label de st.radio) */
+.stRadio > label {
+    color: var(--space) !important;
+    font-weight: 600;
+}
+
