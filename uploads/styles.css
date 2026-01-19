@@ -80,16 +80,34 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
-/* Contenedores de selectbox y multiselect */
-.stSelectbox > div > div,
-.stMultiSelect > div > div {
-  border-radius: 0!important;
-  border: 1px solid var(--blue)!important;
+/* ============================
+   SELECTBOX y MULTISELECT
+   ============================ */
+
+/* Estado normal: borde azul, esquinas rectas, fondo blanco */
+.stSelectbox [data-baseweb="select"],
+.stMultiSelect [data-baseweb="select"],
+.stSelectbox [data-baseweb="select"] > div,
+.stMultiSelect [data-baseweb="select"] > div {
+    border-radius: 0 !important;
+    border: 1px solid var(--blue) !important;   /* #0047BB */
+    background-color: var(--white) !important;  /* #FFFFFF */
+    box-shadow: none !important;
 }
 
-/* Focus en selectbox y multiselect */
-.stSelectbox > div > div:focus-within,
-.stMultiSelect > div > div:focus-within {
-  border-color: var(--indigo)!important;
-  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3)!important;
+/* Estado foco (cuando haces clic o tab) */
+.stSelectbox [data-baseweb="select"]:focus-within,
+.stMultiSelect [data-baseweb="select"]:focus-within,
+.stSelectbox [data-baseweb="select"]:focus-within > div,
+.stMultiSelect [data-baseweb="select"]:focus-within > div {
+    border-color: var(--indigo) !important;     /* #685BC7 */
+    box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* halo azul translúcido */
+}
+
+/* Chips del multiselect con tu amarillo Sunglow */
+.stMultiSelect [data-baseweb="tag"] {
+    background-color: var(--sunglow) !important;  /* #FED141 */
+    color: var(--space) !important;               /* #0D0D52 */
+    border-radius: 0 !important;
+    border: none !important;
 }
