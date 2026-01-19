@@ -1,0 +1,10 @@
+   [theme]
+   base = "light"
+
+   primaryColor = "#0D0D52"  # space indigo
+   backgroundColor = "white"
+   secondaryBackgroundColor = "#F5F5F5"
+   textColor = "black"
+
+   baseRadius = 0
+   buttonRadius = 0
