@@ -9,6 +9,23 @@ html, body, [class*="st-"], label, div {
     font-family: 'Poppins', sans-serif;
 }
 
+:root {
+  --space:    #0D0D52;
+  --offwhite: #F4EFE2;
+  --blue:     #0047BB;
+  --indigo:   #685BC7;
+  --lush:     #B7BF10;  /* verde (Lush)  */
+  --sunglow:  #FED141;  /* amarillo      */
+  --orange:   #FF5C39;  /* naranja       */
+  --white:    #FFFFFF;
+}
+
+/* Fondo general de la app */
+.stApp {
+  background-color: var(--offwhite) !important;
+  color: var(--space) !important;
+}
+
 /* Quitar esquinas redondeadas de todas las imágenes de la app */
 .stApp img {
     border-radius: 0 !important;
@@ -24,16 +41,42 @@ h1, h2, h3, h4, h5, h6,
     line-height: 1.2 !important;
 }
 
-/* Forzar botones al color del tema */
-.stButton > button {
-    background-color: #00FF00 !important;
-    border-color: #00FF00 !important;
-    color: white !important;
+/* Botones principales */
+.stButton > button,
+.stForm .stFormSubmitButton > button {
+  background-color: var(--blue) !important;
+  border-radius: 0 !important;
+  border: 1px solid var(--blue) !important;
+  color: var(--white) !important;
+  box-shadow: none !important;
 }
 
-/* Hover un poco más oscuro */
-.stButton > button:hover {
-    background-color: #00CC00 !important;
-    border-color: #00CC00 !important;
+/* Hover de botones */
+.stButton > button:hover,
+.stForm .stFormSubmitButton > button:hover {
+  background-color: var(--indigo) !important;
+  border-color: var(--indigo) !important;
 }
 
+/* Campos de texto y numéricos */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input {
+  border-radius: 0 !important;
+  border: 1px solid var(--blue) !important;
+}
+
+/* Efecto al enfocar (focus) */
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus {
+  outline: none !important;
+  border-color: var(--indigo) !important;
+  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* azul translúcido */
+}
+
+/* Caja de alerta en naranja */
+.alerta-naranja {
+  background-color: var(--orange);
+  color: var(--white);
+  padding: 0.75rem 1rem;
+  border-radius: 0;
+}
