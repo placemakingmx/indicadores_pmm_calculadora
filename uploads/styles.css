@@ -84,90 +84,106 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
-/* ===================== RADIO STREAMLIT: ARO AZUL + PUNTO ÍNDIGO CONTROLADO ===================== */
+/* ===================== RADIO STREAMLIT: ARO AZUL + PUNTO ÍNDIGO ===================== */
 
 /* 1) Ocultar el radio nativo para que no meta colores (accent-color, etc.) */
-.stRadio input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+.stRadio > div[role="radiogroup"] input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* 2) Aro exterior: primer div dentro del label es el círculo contenedor */
-.stRadio [data-baseweb="radio"] > div:first-child {
-    /* círculo exterior */
-    width: 16px !important;
-    height: 16px !important;
-    border-radius: 50% !important;
-    border: 2px solid var(--blue) !important;         /* aro azul SIEMPRE */
-    background-color: var(--cream) !important;        /* fondo interior del aro */
-    
-    /* centramos el puntito */
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    box-shadow: none !important;
+.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--blue) !important;      /* aro azul siempre */
+  background-color: var(--offwhite) !important;  /* fondo interior */
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
 }
 
-/* 3) Puntito interior: segundo div dentro del contenedor (st-by / st-bd) */
-.stRadio [data-baseweb="radio"] > div:first-child > div {
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 50% !important;
-    box-shadow: none !important;
+/* 3) Puntito interior: segundo div dentro del contenedor */
+.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
 }
+
 /* 4) Puntito de la opción SELECCIONADA: clase st-bd -> índigo */
-.stRadio [data-baseweb="radio"] > div:first-child > div.st-bd {
-    background-color: var(--indigo) !important;
+.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-bd {
+  background-color: var(--indigo) !important;
 }
 
 /* 5) Puntito de la opción NO seleccionada: clase st-by -> transparente */
-.stRadio [data-baseweb="radio"] > div:first-child > div.st-by {
-    background-color: transparent !important;
+.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-by {
+  background-color: transparent !important;
 }
 
-/* ======================= ESTILO PARA TABLAS st.table ======================= */
+/* ========================= ESTILO UNIFICADO PARA st.dataframe ========================= */
 
-/* contenedor de las tablas */
-.stTable {
-    border-radius: 0.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: var(--offwhite);
-    overflow: hidden;
-    font-family: 'Poppins', sans-serif;
+/* Contenedor principal de cualquier st.dataframe */
+div[data-testid="stDataFrame"] {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #f7f4ec;
+  overflow: hidden; /* respeta el border-radius */
+  font-family: 'Poppins', sans-serif;
 }
 
-/* tabla interna */
-.stTable table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-    background-color: var(--offwhite);
+/* Quitar bordes o fondos raros internos */
+div[data-testid="stDataFrame"] > div {
+  border: none !important;
+  background: transparent !important;
 }
 
-/* encabezados */
-.stTable thead tr th {
-    background-color: var(--blue);
-    color: #ffffff;
-    padding: 0.55rem 0.75rem;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+/* La tabla HTML que pinta el DataFrame */
+div[data-testid="stDataFrame"] table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background-color: #f7f4ec;
 }
 
-/* celdas del cuerpo */
-.stTable tbody tr td {
-    padding: 0.45rem 0.75rem;
-    color: var(--space);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+/* Encabezados de columna */
+div[data-testid="stDataFrame"] thead tr th {
+  background-color: var(--blue);
+  color: #ffffff;
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-/* filas alternadas */
-.stTable tbody tr:nth-child(even) td {
-    background-color: rgba(0, 0, 0, 0.015);
+/* Celdas del cuerpo */
+div[data-testid="stDataFrame"] tbody tr td {
+  padding: 0.45rem 0.75rem;
+  color: var(--space);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* hover de fila */
-.stTable tbody tr:hover td {
-    background-color: rgba(254, 209, 65, 0.12); /* sunglow translúcido */
+/* Filas alternadas */
+div[data-testid="stDataFrame"] tbody tr:nth-child(even) td {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+/* Hover de fila (amarillo sunglow translúcido) */
+div[data-testid="stDataFrame"] tbody tr:hover td {
+  background-color: rgba(254, 209, 65, 0.10);
+}
+
+/* Scrollbars discretos dentro de las tablas (opcional) */
+div[data-testid="stDataFrame"] ::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+div[data-testid="stDataFrame"] ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
 }
