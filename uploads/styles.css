@@ -1,0 +1,25 @@
+/* style.css */
+
+/* Importa la fuente Poppins al inicio del archivo */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+
+/* Fuente global Poppins */
+html, body, [class*="st-"], label, div {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Quitar esquinas redondeadas de todas las imágenes de la app */
+.stApp img {
+    border-radius: 0 !important;
+}
+
+/* Ensure all headers and Streamlit-generated titles use the same font */
+h1, h2, h3, h4, h5, h6,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6,
+[data-testid="stAppViewContainer"] h1, [data-testid="stAppViewContainer"] h2,
+.stHeader, .stTitle {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+}
