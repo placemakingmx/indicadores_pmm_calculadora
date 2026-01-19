@@ -225,7 +225,7 @@ Copia y pega el siguiente valor en el cuestionario.
 
         df = pd.DataFrame(filas)
         st.subheader("Distribución porcentual respecto a la población total")
-        st.dataframe(df, use_container_width=True)
+        st.table(df)
 
 
 # --------------------------------------------------------------------
@@ -512,7 +512,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
 
         df_valores = pd.DataFrame(filas_valores)
         st.subheader("Valores detectados en la tabla")
-        st.dataframe(df_valores, use_container_width=True)
+        st.table(df_valores)
 
         # 4) Calcular TM y puntajes individuales
         try:
@@ -576,7 +576,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
 
         df_puntajes = pd.DataFrame(filas_puntajes)
         st.subheader("Puntaje por indicador")
-        st.dataframe(df_puntajes, use_container_width=True)
+        st.table(df_puntajes)
 
 
 # --------------------------------------------------------------------
