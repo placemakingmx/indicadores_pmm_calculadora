@@ -85,31 +85,6 @@ h1, h2, h3, h4, h5, h6,
   border-radius: 0;
 }
 
-/* 10. ============================ SELECTBOX y MULTISELECT ============================ */
-
-/* Estado normal: borde azul, esquinas rectas, fondo blanco */
-.stSelectbox > div > div,
-.stMultiSelect > div > div {
-  border-radius: 0 !important;
-  border: 1px solid var(--blue) !important;   /* #0047BB */
-  background-color: var(--white) !important;  /* #FFFFFF */
-  box-shadow: none !important;
-}
-
-/* Estado foco (cuando haces clic o tab) */
-.stSelectbox > div > div:focus-within,
-.stMultiSelect > div > div:focus-within {
-  border-color: var(--indigo) !important;  /* #685BC7 */
-  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* halo azul translúcido */
-}
-
-/* Chips del multiselect con tu amarillo Sunglow */
-.stMultiSelect [data-baseweb="tag"] {
-  background-color: var(--sunglow) !important;  /* #FED141 */
-  color: var(--space) !important;               /* #0D0D52 */
-  border-radius: 0 !important;
-  border: none !important;
-}
 /* ============================ FIJAR CÍRCULO DEL st.radio ============================ */
 /* Quitar outline/halo rojo del radio interno (BaseWeb) */
 .stRadio [data-baseweb="radio"] {
@@ -139,3 +114,15 @@ h1, h2, h3, h4, h5, h6,
 .stRadio * {
     box-shadow: none !important;
 }
+
+/* ============================ FORZAR COLOR DEL INPUT RADIO NATIVO ============================ */
+.stRadio input[type="radio"] {
+    /* Color del círculo (borde + relleno) del radio nativo */
+    accent-color: var(--indigo) !important;  /* usa indigo en lugar del rojo por defecto */
+}
+
+/* Opcional: si quieres que al pasar el ratón también se mantenga el mismo color */
+.stRadio input[type="radio"]:hover {
+    accent-color: var(--indigo) !important;
+}
+
