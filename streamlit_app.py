@@ -16,9 +16,9 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 # Configuración de la página (título, icono, layout)
 # --------------------------------------------------------------------
 st.set_page_config(
-    page_title="Indicadores de lugar",
+    page_title="**Indicadores de lugar**",
     page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else None,
-    layout="centered",
+    layout="leftered",
 )
 
 # --------------------------------------------------------------------
@@ -49,9 +49,8 @@ st.title("Indicadores de lugar")
 
 st.markdown(
     """
-Antes de calcular los indicadores, **consulta previamente el lugar** en el mapa
-de INEGI **“Espacio y datos de México”** y, si están disponibles, **utiliza las coordenadas**
-para ubicar con precisión el área de interés.
+Utiliza esta herramienta para obtener los valores de **Porcentaje de diversidad** y **Puntos de accesibilidad y conexión**
+a partir de los datos del INEGI: **“Espacio y datos de México”**.
 
 **Pasos sugeridos:**
 
