@@ -137,7 +137,7 @@ h1, h2, h3, h4, h5, h6,
 .stTable {
   border-radius: 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: var(--offwhite);
+  background-color: var(--white);
   overflow: hidden;
   font-family: 'Poppins', sans-serif;
 }
@@ -147,7 +147,7 @@ h1, h2, h3, h4, h5, h6,
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
-  background-color: var(--offwhite);
+  background-color: var(--white);
 }
 
 /* Encabezados */
@@ -187,8 +187,8 @@ h1, h2, h3, h4, h5, h6,
 
 /* Cuando el text_area tiene foco (focus-within) */
 .stTextArea div[data-baseweb="textarea"]:focus-within {
-    border-color: var(--blue) !important;          /* tu azul corporativo */
-    box-shadow: 0 0 0 1px var(--blue) !important;  /* halo azul en vez de rojo */
+    border-color: var(--indigo) !important;          /* tu azul corporativo */
+    box-shadow: 0 0 0 1px var(--indigo) !important;  /* halo azul en vez de rojo */
 }
 /* El propio textarea por dentro */
 .stTextArea textarea {
