@@ -183,18 +183,21 @@ h1, h2, h3, h4, h5, h6,
     border-radius: 0.5rem !important;              /* opcional, por estética */
     border: 1px solid rgba(0, 0, 0, 0.2) !important;
     box-shadow: none !important;                   /* quita sombras por defecto */
+  
 }
 
 /* Cuando el text_area tiene foco (focus-within) */
 .stTextArea div[data-baseweb="textarea"]:focus-within {
     border-color: var(--indigo) !important;          /* tu azul corporativo */
     box-shadow: 0 0 0 1px var(--indigo) !important;  /* halo azul en vez de rojo */
+    background-color: var(--white);
 }
 /* El propio textarea por dentro */
 .stTextArea textarea {
     border: none !important;        /* el borde lo maneja el contenedor */
     box-shadow: none !important;    /* quita cualquier sombra interna */
     outline: none !important;       /* sin outline por defecto */
+    background-color: var(--white);
 }
 
 /* Por si acaso, en estado focus (aunque outline ya está en none) */
