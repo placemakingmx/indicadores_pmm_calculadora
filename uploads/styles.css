@@ -84,51 +84,25 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
-/* ============================ RADIO: USAR DIRECTAMENTE input:checked ============================ */
 
-/* Quitamos la apariencia de sistema y dibujamos nuestro círculo */
-.stRadio input[type="radio"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* ===================== RADIO STREAMLIT: CÍRCULO AZUL + PUNTO ÍNDIGO ===================== */
 
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-
-  border: 2px solid var(--blue);            /* aro azul cuando NO está seleccionado */
-  background-color: var(--cream);           /* interior del color de fondo */
-  box-shadow: none!important;
-  outline: none!important;
-
-  margin-right: 0.5rem;                     /* espacio respecto al texto */
-  cursor: pointer;
+/* 1) Aro exterior: hacemos que el primer div dentro del label sea un círculo con borde azul */
+.stRadio [data-baseweb="radio"] > div:first-child {
+  border-radius: 50% !important;
+  border: 2px solid var(--blue) !important;  /* aro azul */
 }
 
-/* Estado seleccionado: aro índigo + puntito índigo en el centro */
-.stRadio input[type="radio"]:checked {
-  border-color: var(--indigo);              /* cambiamos el aro a índigo */
+/* 2) Puntito interior: usamos las clases que Streamlit genera para seleccionado / no seleccionado */
 
-  /* Puntito del centro hecho con un radial-gradient */
-  background:
-    radial-gradient(
-      circle,
-      var(--indigo) 0,                      /* centro índigo */
-      var(--indigo) 45%,                    /* hasta ~45% radio índigo */
-      var(--cream) 46%,                     /* a partir de ahí color de fondo */
-      var(--cream) 100%
-    );
+/* Opción seleccionada: inner div con clase st-by -> puntito índigo */
+.stRadio [data-baseweb="radio"] .st-by {
+  border-radius: 50% !important;
+  background-color: var(--indigo) !important;  /* color del punto cuando está seleccionado */
 }
 
-/* Seguridad extra: nada de halos ni sombras raras (incluido foco) */
-.stRadio input[type="radio"]:focus,
-.stRadio input[type="radio"]:focus-visible {
-  outline: none!important;
-  box-shadow: none!important;
-}
-
-/* Por si el navegador sigue intentando usar accent-color en algún sitio */
-.stRadio input[type="radio"],
-.stRadio input[type="radio"]:checked {
-  accent-color: var(--indigo)!important;
+/* Opción NO seleccionada: inner div con clase st-bd -> puntito transparente */
+.stRadio [data-baseweb="radio"] .st-bd {
+  border-radius: 50% !important;
+  background-color: transparent !important;   /* sin punto cuando no está seleccionado */
 }
