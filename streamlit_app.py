@@ -16,7 +16,7 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 # Configuración de la página (título, icono, layout)
 # --------------------------------------------------------------------
 st.set_page_config(
-    page_title="**Indicadores de lugar**",
+    page_title="Indicadores de lugar",
     page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else None,
     layout="centered",
 )
