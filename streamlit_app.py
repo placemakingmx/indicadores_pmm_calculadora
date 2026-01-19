@@ -192,7 +192,7 @@ y se convertirán automáticamente a enteros sin comas.
 
         # Cálculo de la proporción MNNAPAM
         # Fórmula: (PF + NNA*(PM/PT) + PAM*(PM/PT)) / PT
-        mnn_pam = (PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT
+        mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT)*10
 
         st.markdown(
             f"""
