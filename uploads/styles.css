@@ -80,3 +80,18 @@ h1, h2, h3, h4, h5, h6,
   padding: 0.75rem 1rem;
   border-radius: 0;
 }
+
+/* Borde de selectbox / multiselect */
+.stSelectbox [data-baseweb="select"],
+.stMultiSelect [data-baseweb="select"] {
+  border-radius: 0!important;
+  border: 1px solid var(--blue)!important;
+}
+
+/* Focus */
+.stSelectbox [data-baseweb="select"]:focus-within,
+.stMultiSelect [data-baseweb="select"]:focus-within {
+  border-color: var(--indigo)!important;
+  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3)!important;
+}
+
