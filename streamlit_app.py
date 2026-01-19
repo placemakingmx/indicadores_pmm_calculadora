@@ -18,7 +18,6 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 st.set_page_config(
     page_title="Indicadores de lugar",
     page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else None,
-    layout="left",
 )
 
 # --------------------------------------------------------------------
