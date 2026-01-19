@@ -10,6 +10,11 @@ BASE_DIR = Path(__file__).parent
 LOGO_PATH = BASE_DIR / "uploads" / "logo.png"
 CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
 
 # --------------------------------------------------------------------
 # Configuración de la página (título, icono, layout)
