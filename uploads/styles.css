@@ -145,4 +145,23 @@ h1, h2, h3, h4, h5, h6,
     margin-left: 0 !important;
 }
 
+/* Ejemplo de estilo tipo "chip" para el st.radio */
+.stRadio [role="radiogroup"] [role="radio"] {
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* No seleccionado */
+.stRadio [role="radiogroup"] [role="radio"][aria-checked="false"] {
+    background-color: transparent;
+    color: var(--space);
+}
+
+/* Seleccionado */
+.stRadio [role="radiogroup"] [role="radio"][aria-checked="true"] {
+    background-color: var(--sunglow);
+    color: var(--space);
+}
 
