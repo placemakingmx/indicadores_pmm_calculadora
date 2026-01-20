@@ -216,35 +216,28 @@ Copia y pega el siguiente valor en el cuestionario.
         # 2. Texto base con los placeholders
         texto = """
         ### ¿Qué evalúa este indicador?
-
-        Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área,
-        es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
-        Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta espacios
-        con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos e intergeneracionales**. 
         
-        Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan apropiarse del lugar en forma digna y segura.
-        """
+        Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área, es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
+        
+        Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta espacios con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos e intergeneracionales**. Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan apropiarse del lugar en forma digna y segura.
+        
         ### Fórmula utilizada
-
-        Usando los datos de INEGI:
-
+        
+        Usando los datos de INEGI:  
         **PT**: Población total  
         **PF**: Población femenina  
         **PM**: Población masculina  
         **NNA**: Población de 0 a 14 años  
         **PAM**: Población de 60 años y más
         """
-
-        # 4. Mostrar la primera parte del texto
+        
+        # 4. Mostrar el texto explicativo y la fórmula
         st.markdown(texto)
-
-        # 5. Mostrar la fórmula en bloque con st.latex
+        
         st.latex(r"""
-                    
         \text{MNNAPAM} = \frac{
         PF + NNA \cdot \frac{PM}{PT} + PAM \cdot \frac{PM}{PT}
         }{PT} \times 10
-                    
         """)
 
         # 6. Mostrar el resto del texto, usando LATEX_5 ya reemplazado
