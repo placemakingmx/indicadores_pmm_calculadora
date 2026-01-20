@@ -79,7 +79,7 @@ st.subheader("Tutorial:")
 st.markdown("Este GIF te muestra cómo obtener la información desde la página del INEGI.")
 
 # GIF del tutorial entre los separadores
-st.image("uploads/tutorial.gif", use_column_width=True)
+st.image("uploads/tutorial.gif", width=700)
 st.markdown("---")
 
 # --------------------------------------------------------------------
@@ -213,6 +213,47 @@ Copia y pega el siguiente valor en el cuestionario.
 
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
 
+        # 2. Texto base con los placeholders
+        texto = """
+        ### ¿Qué evalúa este indicador?
+
+        Este primer indicador estima la **proporción de mujeres, niñas, niños y personas adultas mayores (MNNAPAM)** dentro de la población total del área.
+        Un valor más alto indica un entorno donde hay **más personas que requieren mayor cuidado y accesibilidad** (infancias, personas mayores y mujeres).
+
+        ### Fórmula utilizada
+
+        Usando los datos de INEGI:
+
+        **PT**: Población total  
+        **PF**: Población femenina  
+        **PM**: Población masculina  
+        **NNA**: Población de 0 a 14 años  
+        **PAM**: Población de 60 años y más
+        """
+
+        # 4. Mostrar la primera parte del texto
+        st.markdown(texto)
+
+        # 5. Mostrar la fórmula en bloque con st.latex
+        st.latex(r"""
+                    
+        \text{MNNAPAM} = \frac{
+        PF + NNA \cdot \frac{PM}{PT} + PAM \cdot \frac{PM}{PT}
+        }{PT} \times 10
+                    
+        """)
+
+        # 6. Mostrar el resto del texto, usando LATEX_5 ya reemplazado
+        texto2 = """
+        El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujeres, niñas, niños y personas mayores.
+
+        ### ¿Por qué es una aproximación?
+
+        Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente** cuántas niñas/niños ni cuántas mujeres/hombres mayores hay.
+        Por eso se usa la proporción general de hombres <<LATEX_5>> para estimar la parte masculina de esos grupos.
+        Esto hace que el indicador sea una **estimación razonable y comparable**, pero no un conteo exacto por género.
+        """
+
         # Construcción de la tabla
         filas = []
         for etiqueta, codigo in ETIQUETAS:
@@ -233,8 +274,17 @@ Copia y pega el siguiente valor en el cuestionario.
 
         df = pd.DataFrame(filas)
         st.subheader("Distribución porcentual respecto a la población total")
-        st.table(df)
+        # df es tu DataFrame
+        html_table = df.to_html(index=False)
 
+        st.markdown(
+            f"""
+            <div class="stTable tabla-scroll">
+                {html_table}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # --------------------------------------------------------------------
 # Definición de indicadores de accesibilidad / conexión
@@ -518,10 +568,6 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                 }
             )
 
-        df_valores = pd.DataFrame(filas_valores)
-        st.subheader("Valores detectados en la tabla")
-        st.table(df_valores)
-
         # 4) Calcular TM y puntajes individuales
         try:
             puntajes, TM = calcular_puntajes_acceso(valores_indicadores)
@@ -531,7 +577,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
 
         st.success(f"Total de manzanas (TM) calculado correctamente: TM = {TM}")
 
-        # 5) Calcular Puntaje Accesibilidad y Puntaje Conexiones
+            # 5) Calcular Puntaje Accesibilidad y Puntaje Conexiones
         puntaje_accesibilidad = (
             puntajes["RDC"] * 0.5
             + puntajes["RSR"] * 2.0
@@ -561,14 +607,53 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
         col1, col2 = st.columns(2)
         with col1:
             st.metric(
-                label="Puntaje Accesibilidad",
+                label="Puntaje Accesibilidad (PA)",
                 value=f"{puntaje_accesibilidad:.2f}",
             )
         with col2:
             st.metric(
-                label="Puntaje Conexiones",
+                label="Puntaje Conexiones (PC)",
                 value=f"{puntaje_conexiones:.2f}",
             )
+        
+            # Explicación de PA y PC
+        st.markdown("""
+        ### ¿Qué evalúan PA y PC?
+
+        - **PA (Puntaje de Accesibilidad)** resume cuántas manzanas cuentan con elementos
+        que facilitan caminar y moverse con seguridad (rampas, pasos peatonales,
+        banquetas, semáforos, etc.).
+        - **PC (Puntaje de Conexiones)** resume qué tan bien conectado está el área con
+        otros puntos de la ciudad (transporte colectivo, paradas, ciclovías, estaciones
+        de bici, etc.).
+
+        Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
+        **Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas."""
+        " Con esos puntajes normalizados se construyen los índices agregados:")
+
+        st.latex(
+            r"""\small
+        PA = 0.5\cdot RDC + 2.0\cdot RSR + 2.0\cdot PP + 1.0\cdot BQ \\
+        \quad + 0.5\cdot GN + 1.0\cdot SA + 1.0\cdot PTP + 2.0\cdot SRPP
+        """,
+            width="content",
+        )
+
+        st.latex(
+            r"""\small
+        PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\cdot LNC \\
+        \quad + 1.0\cdot SP + 1.0\cdot PTP + 1.0\cdot EBC + 1.0\cdot TC
+        """,
+            width="content",
+        )
+
+
+        st.markdown("""
+        Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
+        Valores más altos de **PA** indican mejor accesibilidad peatonal; valores más altos
+        de **PC** indican mejor conexión del área con el resto de la ciudad.
+        """)
+
 
         # 7) Tabla con el valor (puntaje) de cada variable
         filas_puntajes = []
@@ -581,10 +666,16 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                     "Puntaje (2 decimales)": f"{puntajes[codigo]:.2f}",
                 }
             )
-
         df_puntajes = pd.DataFrame(filas_puntajes)
+
         st.subheader("Puntaje por indicador")
-        st.table(df_puntajes)
+
+        # ️ AQUÍ va la tabla scroll con el mismo diseño
+        html_puntajes = df_puntajes.to_html(index=False)
+        st.markdown(
+            f'<div class="stTable tabla-scroll">{html_puntajes}</div>',
+            unsafe_allow_html=True,
+        )
 
 
 # --------------------------------------------------------------------
