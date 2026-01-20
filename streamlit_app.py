@@ -130,7 +130,7 @@ def extraer_valores(texto: str):
 # Sección 1: Porcentaje de diversidad (MNNAPAM)
 # --------------------------------------------------------------------
 def seccion_diversidad():
-    st.header("Porcentaje de diversidad (MNNAPAM)")
+    st.header("Porcentaje de diversidad")
     st.markdown(
         """
 Pega el bloque de texto que contenga, con estas etiquetas **exactas**
