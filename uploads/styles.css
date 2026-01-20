@@ -1,235 +1,687 @@
-/* style.css */
+from pathlib import Path
+import streamlit as st
+import pandas as pd
+import re
 
-/* 1. Importa la fuente Poppins correctamente */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+# --------------------------------------------------------------------
+# Rutas base (para logo y CSS)
+# --------------------------------------------------------------------
+BASE_DIR = Path(__file__).parent
+LOGO_PATH = BASE_DIR / "uploads" / "logo.png"
+CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 
-/* 2. Fuente global Poppins */
-html, body, [class*="st-"], label, div {
-  font-family: 'Poppins', sans-serif;
-}
+# --------------------------------------------------------------------
+# Configuración de la página (título, icono, layout)
+# --------------------------------------------------------------------
+import os
+icon_path = "uploads/carita.png"
 
-/* 3. Variables de color de tu manual */
-:root {
-  --space:   #0D0D52;
-  --offwhite:#F4EFE2;
-  --blue:    #0047BB;
-  --indigo:  #685BC7;
-  --lush:    #B7BF10;  /* verde (Lush) */
-  --sunglow: #FED141;  /* amarillo */
-  --orange:  #FF5C39;  /* naranja */
-  --white:   #FFFFFF;
-}
+st.set_page_config(
+    page_title="Indicadores del lugar",
+    page_icon=icon_path if os.path.exists(icon_path) else None,
+    layout="centered",
+)
 
-/* 4. Fondo general de la app */
-.stApp {
-  background-color: var(--offwhite) !important;
-  color: var(--space) !important;
-}
+# --------------------------------------------------------------------
+# Ocultar menú y footer de Streamlit
+# --------------------------------------------------------------------
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-/* 5. Quitar esquinas redondeadas de todas las imágenes de la app */
-.stApp img {
-  border-radius: 0 !important;
-}
+# --------------------------------------------------------------------
+# Cargar estilos personalizados (styles.css)
+# --------------------------------------------------------------------
+def cargar_css_local(css_path: Path) -> None:
+    if css_path.exists():
+        with open(css_path, "r", encoding="utf-8") as f:
+            css = f.read()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
-/* 6. Títulos / encabezados con Poppins (corregidos los selectores) */
-h1, h2, h3, h4, h5, h6,
-.stMarkdown h1,
-.stMarkdown h2,
-.stMarkdown h3,
-.stMarkdown h4,
-.stMarkdown h5,
-.stMarkdown h6,
-[data-testid="stAppViewContainer"] h1,
-[data-testid="stAppViewContainer"] h2,
-.stHeader .stTitle {
-  font-family: 'Poppins', sans-serif !important;
-  font-weight: 400 !important;
-  line-height: 1.2 !important;
-}
+cargar_css_local(CSS_PATH)
 
-/* Botones principales (st.button, submit, etc.) */
-.stButton > button {
-  background-color: var(--space) !important;
-  border-radius: 0.5rem !important;   /* o 8rem si quieres píldora, sin espacio */
-  border: 1px solid var(--space) !important;
-  color: var(--white) !important;
-  box-shadow: none !important;
-}
+# --------------------------------------------------------------------
+# Logo en la parte superior
+# --------------------------------------------------------------------
+if LOGO_PATH.exists():
+    st.image(str(LOGO_PATH), width=170)  # ajusta el ancho si quieres
 
-/* Hover de botones normales */
-.stButton > button:hover {
-  background-color: var(--indigo) !important;
-  border-color: var(--indigo) !important;
-  color: var(--white) !important;
-}
+# --------------------------------------------------------------------
+# Configuración general y descripción inicial
+# --------------------------------------------------------------------
+st.title("Indicadores de lugar")
+st.markdown(
+    """
+Utiliza esta herramienta para obtener los valores de **Porcentaje de diversidad** y
+**Puntos de accesibilidad y conexión** a partir de los datos del INEGI:
+**"Espacio y datos de México"**.
 
-/* Botón de enlace (st.link_button) */
-[data-testid="stLinkButton"] > a {
-  background-color: var(--space) !important;
-  border-radius: 0.5rem !important;   /* mismo radio que los otros */
-  border: 1px solid var(--space) !important;
-  color: var(--white) !important;
-  text-decoration: none !important;
-  padding: 0.25rem 0.75rem;           /* opcional, para que se vea como botón */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+**Pasos sugeridos:**
+1. Haz clic en el botón para abrir el mapa de INEGI en una nueva ventana.
+2. Usa el buscador o las coordenadas (si las tienes) para ubicar el lugar.
+3. Elige el área a consultar (por ejemplo, una manzana, colonia o polígono de interés).
+4. Haz clic en **"Consultar"** en la interfaz del mapa para obtener los datos.
+"""
+)
 
-/* Hover del botón de enlace */
-[data-testid="stLinkButton"] > a:hover {
-  background-color: var(--indigo) !important;
-  border-color: var(--indigo) !important;
-  color: var(--white) !important;
-}
+# Botón que abre el mapa de INEGI en otra pestaña
+st.link_button(
+    "Abrir mapa «Espacio y datos de México» del INEGI",
+    "https://www.inegi.org.mx/app/mapa/espacioydatos/default.aspx",
+)
 
-/* Hover de botones */
-.stButton > button:hover,
-.stLinkButton > button:hover,
-.stLinkButton > a:hover {
-    background-color: var(--indigo)!important;
-    border-color: var(--indigo)!important;
-    color: var(--white)!important;
-}
+st.markdown("---")
+st.subheader("Tutorial:")
+st.markdown("Este GIF te muestra cómo obtener la información desde la página del INEGI.")
 
-/* 8. Campos de texto y numéricos */
-.stTextInput > div > div > input,
-.stNumberInput > div > div > input {
-  border-radius: 0 !important;
-  border: 1px solid var(--blue) !important;
-}
+# GIF del tutorial entre los separadores
+st.image("uploads/tutorial.gif", width=700)
+st.markdown("---")
 
-/* Efecto al enfocar (focus) en campos de texto y numéricos */
-.stTextInput > div > div > input:focus,
-.stNumberInput > div > div > input:focus {
-  outline: none !important;
-  border-color: var(--indigo) !important;
-  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* azul translúcido */
-}
+# --------------------------------------------------------------------
+# Selector de tipo de consulta
+# --------------------------------------------------------------------
+st.subheader("Indicadores a utilizar")
+opcion = st.radio(
+    "Selecciona qué quieres calcular:",
+    ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
+)
 
-/* 9. Caja de alerta en naranja */
-.alerta-naranja {
-  background-color: var(--orange);
-  color: var(--white);
-  padding: 0.75rem 1rem;
-  border-radius: 0;
-}
-/* ===================== RADIO STREAMLIT: ARO AZUL + PUNTO ÍNDIGO ===================== */
-
-/* 1) Ocultar el radio nativo para que no meta colores (accent-color, etc.) */
-.stRadio > div[role="radiogroup"] input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 2) Aro exterior: primer div dentro del label es el círculo contenedor */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child {
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  border: 2px solid var(--blue) !important;      /* aro azul siempre */
-  background-color: var(--offwhite) !important;  /* fondo interior */
-
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none !important;
-}
-
-/* 3) Puntito interior: segundo div dentro del contenedor */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div {
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 50% !important;
-  box-shadow: none !important;
-}
-
-/* 4) Puntito de la opción SELECCIONADA: clase st-bd -> índigo */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-bd {
-  background-color: var(--indigo) !important;
-}
-
-/* 5) Puntito de la opción NO seleccionada: clase st-by -> transparente */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-by {
-  background-color: transparent !important;
-}
-
-/* ======================= ESTILO PARA TABLAS st.table ======================= */
-
-/* Contenedor principal de st.table */
-.stTable {
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: var(--white);
-  overflow: hidden;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Tabla interna */
-.stTable table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-  background-color: var(--white);
-}
-
-/* Encabezados */
-.stTable thead tr th {
-  background-color: var(--indigo);
-  color: #ffffff;
-  padding: 0.55rem 0.75rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-/* Celdas del cuerpo */
-.stTable tbody tr td {
-  padding: 0.45rem 0.75rem;
-  color: var(--space);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-/* Filas alternadas */
-.stTable tbody tr:nth-child(even) td {
-  background-color: rgba(0, 0, 0, 0.015);
-}
-
-/* Hover de fila (sunglow translúcido) */
-.stTable tbody tr:hover td {
-  background-color: rgba(254, 209, 65, 0.12);
-}
-/* ================= TEXT AREA: QUITAR MARCO ROJO ================= */
-
-/* Contenedor BaseWeb del text_area (cuadro completo) */
-.stTextArea div[data-baseweb="textarea"] {
-    border-radius: 0.5rem !important;              /* opcional, por estética */
-    border: 1px solid rgba(0, 0, 0, 0.2) !important;
-    box-shadow: none !important;                   /* quita sombras por defecto */
-  
-}
-
-/* Cuando el text_area tiene foco (focus-within) */
-.stTextArea div[data-baseweb="textarea"]:focus-within {
-    border-color: var(--indigo) !important;          /* tu azul corporativo */
-    box-shadow: 0 0 0 1px var(--indigo) !important;  /* halo azul en vez de rojo */
-    background-color: var(--white);
-}
-/* El propio textarea por dentro */
-.stTextArea textarea {
-    border: none !important;        /* el borde lo maneja el contenedor */
-    box-shadow: none !important;    /* quita cualquier sombra interna */
-    outline: none !important;       /* sin outline por defecto */
-    background-color: var(--white);
-}
-
-/* Por si acaso, en estado focus (aunque outline ya está en none) */
-.stTextArea textarea:focus {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
+# --------------------------------------------------------------------
+# Definición de etiquetas y funciones comunes (Sección diversidad)
+# --------------------------------------------------------------------
+ETIQUETAS = [
+    ("Población total", "PT"),
+    ("Población femenina", "PF"),
+    ("Población masculina", "PM"),
+    ("Población de 0 a 14 años", "NNA"),
+    ("Población de 15 a 29 años", "PJ"),
+    ("Población de 30 a 59 años", "PA"),
+    ("Población de 60 años y más", "PAM"),
+    ("Población con discapacidad", "PD"),
+]
 
 
+def extraer_valores(texto: str):
+    """
+    Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
+    Devuelve un dict con claves = códigos (PT, PF...) y valores = int.
+    """
+    valores = {}
+    for etiqueta, codigo in ETIQUETAS:
+        # Busca: 'Etiqueta' seguido de espacios y un número que puede tener comas (ej. 6,822)
+        patron = rf"{re.escape(etiqueta)}\s+([\d,]+)\b"
+        coincidencia = re.search(patron, texto)
+        if coincidencia:
+            num_str = coincidencia.group(1).replace(",", "")  # quitar comas
+            try:
+                valores[codigo] = int(num_str)
+            except ValueError:
+                # Si por alguna razón no es entero, se considera no encontrado
+                pass
+    return valores
 
+
+# --------------------------------------------------------------------
+# Sección 1: Porcentaje de diversidad (MNNAPAM)
+# --------------------------------------------------------------------
+def seccion_diversidad():
+    st.header("Porcentaje de diversidad (MNNAPAM)")
+    st.markdown(
+        """
+Pega el bloque de texto que contenga, con estas etiquetas **exactas**
+(puede haber líneas extra, pero se deben mantener estas líneas y nombres):
+
+- Población total
+- Población femenina
+- Población masculina
+- Población de 0 a 14 años
+- Población de 15 a 29 años
+- Población de 30 a 59 años
+- Población de 60 años y más
+- Población con discapacidad
+
+Los valores pueden venir con separadores de miles con coma (por ejemplo, 6,822),
+y se convertirán automáticamente a enteros sin comas.
+"""
+    )
+
+    texto = st.text_area(
+        "Pega aquí el texto con los datos de población:",
+        height=220,
+        placeholder=(
+            "Población total 6,822\n"
+            "Población femenina 3,597\n"
+            "Población masculina 3,224\n"
+            "Población de 0 a 14 años 1,302\n"
+            "Población de 15 a 29 años 1,723\n"
+            "Población de 30 a 59 años 2,781\n"
+            "Población de 60 años y más 1,009\n"
+            "Población con discapacidad 264"
+        ),
+    )
+
+    if st.button("Calcular indicadores de diversidad"):
+        texto_limpio = (texto or "").strip()
+        if not texto_limpio:
+            st.error("Por favor, copia y pega el bloque de texto con los datos de población.")
+            return
+
+        valores = extraer_valores(texto_limpio)
+
+        # Validar que se encontraron las 8 variables
+        if len(valores) != len(ETIQUETAS):
+            faltantes = [cod for _, cod in ETIQUETAS if cod not in valores]
+            st.error(
+                "No se detectaron correctamente los 8 valores requeridos. "
+                "Por favor, copia y pega nuevamente el bloque completo desde "
+                "'Población total' hasta 'Población con discapacidad'."
+            )
+            if faltantes:
+                st.info("Variables faltantes o mal detectadas: " + ", ".join(faltantes))
+            return
+
+        PT = valores["PT"]
+        PF = valores["PF"]
+        PM = valores["PM"]
+        NNA = valores["NNA"]
+        PJ = valores["PJ"]
+        PA = valores["PA"]
+        PAM = valores["PAM"]
+        PD = valores["PD"]
+
+        if PT == 0:
+            st.error("La Población total (PT) no puede ser 0. Verifica los datos.")
+            return
+
+        # Cálculo de la proporción MNNAPAM
+        # Fórmula: (PF + NNA*(PM/PT) + PAM*(PM/PT)) / PT
+        mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT)*10
+
+        st.markdown(
+            f"""
+La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
+respecto al total de la población es de **{mnn_pam:.2f}**.
+
+Copia y pega el siguiente valor en el cuestionario.
+"""
+        )
+
+        st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
+
+        # 2. Texto base con los placeholders
+        texto = """
+        ### ¿Qué evalúa este indicador?
+
+        Este primer indicador estima la **proporción de mujeres, niñas, niños y personas adultas mayores (MNNAPAM)** dentro de la población total del área.
+        Un valor más alto indica un entorno donde hay **más personas que requieren mayor cuidado y accesibilidad** (infancias, personas mayores y mujeres).
+
+        ### Fórmula utilizada
+
+        Usando los datos de INEGI:
+
+        **PT**: Población total  
+        **PF**: Población femenina  
+        **PM**: Población masculina  
+        **NNA**: Población de 0 a 14 años  
+        **PAM**: Población de 60 años y más
+        """
+
+        # 4. Mostrar la primera parte del texto
+        st.markdown(texto)
+
+        # 5. Mostrar la fórmula en bloque con st.latex
+        st.latex(r"""
+                    
+        \text{MNNAPAM} = \frac{
+        PF + NNA \cdot \frac{PM}{PT} + PAM \cdot \frac{PM}{PT}
+        }{PT} \times 10
+                    
+        """)
+
+        # 6. Mostrar el resto del texto, usando LATEX_5 ya reemplazado
+        texto2 = """
+        El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujeres, niñas, niños y personas mayores.
+
+        ### ¿Por qué es una aproximación?
+
+        Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente** cuántas niñas/niños ni cuántas mujeres/hombres mayores hay.
+        Por eso se usa la proporción general de hombres <<LATEX_5>> para estimar la parte masculina de esos grupos.
+        Esto hace que el indicador sea una **estimación razonable y comparable**, pero no un conteo exacto por género.
+        """
+
+        # Construcción de la tabla
+        filas = []
+        for etiqueta, codigo in ETIQUETAS:
+            valor_abs = valores[codigo]
+            if codigo == "PT":
+                porcentaje = 100.0
+            else:
+                porcentaje = (valor_abs / PT) * 100.0
+
+            filas.append(
+                {
+                    "Código": codigo,
+                    "Variable": etiqueta,
+                    "Valor absoluto": valor_abs,
+                    "Porcentaje sobre PT": f"{porcentaje:.2f} %",
+                }
+            )
+
+        df = pd.DataFrame(filas)
+        st.subheader("Distribución porcentual respecto a la población total")
+        # df es tu DataFrame
+        html_table = df.to_html(index=False)
+
+        st.markdown(
+            f"""
+            <div class="stTable tabla-scroll">
+                {html_table}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+# --------------------------------------------------------------------
+# Definición de indicadores de accesibilidad / conexión
+# --------------------------------------------------------------------
+INDICADORES_ACCESO = [
+    ("Recubrimiento de la calle", "RDC"),
+    ("Rampa para silla de ruedas", "RSR"),
+    ("Paso peatonal", "PP"),
+    ("Banqueta", "BQ"),
+    ("Guarnición", "GN"),
+    ("Ciclovía", "CV"),
+    ("Ciclocarril", "CC"),
+    ("Alumbrado público", "AP"),
+    ("Letrero con nombre de la calle", "LNC"),
+    ("Teléfono público", "TP"),
+    ("Árboles y palmeras", "ARB"),
+    ("Semáforo para peatón", "SP"),
+    ("Semáforo auditivo", "SA"),
+    ("Parada de transporte colectivo", "PTP"),
+    ("Estación para bicicleta", "EBC"),
+    ("Alcantarilla de drenaje pluvial", "ADP"),
+    ("Transporte colectivo", "TC"),
+    ("Sin restricción del paso a peatones", "SRPP"),
+    ("Sin restricción del paso a automóviles", "SRPA"),
+    ("Puesto semifijo", "PS"),
+    ("Puesto ambulante", "PA"),
+]
+
+
+def parsear_tabla_accesibilidad(texto: str):
+    """
+    Busca en el texto cada indicador de accesibilidad/conexión y extrae los 5 enteros
+    (En todas, En alguna, En ninguna, No especificado, No aplica),
+    permitiendo separadores de miles con comas.
+
+    Devuelve un dict:
+    {
+        "RDC": {
+            "codigo": "RDC",
+            "nombre": "...",
+            "en_todas": int,
+            "en_alguna": int,
+            "en_ninguna": int,
+            "no_especificado": int,
+            "no_aplica": int,
+        },
+        ...
+    }
+    """
+    valores = {}
+
+    for nombre, codigo in INDICADORES_ACCESO:
+        # Patrón: Nombre + 5 números (con o sin comas) separados por espacios
+        patron = rf"^{re.escape(nombre)}\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$"
+        encontrado = False
+
+        for linea in texto.splitlines():
+            linea = linea.strip()
+            if not linea:
+                continue
+
+            m = re.match(patron, linea)
+            if m:
+                en_todas = int(m.group(1).replace(",", ""))
+                en_alguna = int(m.group(2).replace(",", ""))
+                en_ninguna = int(m.group(3).replace(",", ""))
+                no_especificado = int(m.group(4).replace(",", ""))
+                no_aplica = int(m.group(5).replace(",", ""))
+
+                valores[codigo] = {
+                    "codigo": codigo,
+                    "nombre": nombre,
+                    "en_todas": en_todas,
+                    "en_alguna": en_alguna,
+                    "en_ninguna": en_ninguna,
+                    "no_especificado": no_especificado,
+                    "no_aplica": no_aplica,
+                }
+                encontrado = True
+                break
+
+        # Si no se encontró la línea correspondiente a este indicador,
+        # no se añade al dict; se reportará después.
+        if not encontrado:
+            continue
+
+    return valores
+
+
+def calcular_TM(valores_indicadores: dict) -> int:
+    """
+    Calcula TM a partir de RDC y TC y verifica que sean iguales.
+    """
+    # Recubrimiento de la calle (RDC)
+    info_rdc = valores_indicadores["RDC"]
+    TM_rdc = (
+        info_rdc["en_todas"]
+        + info_rdc["en_alguna"]
+        + info_rdc["en_ninguna"]
+        + info_rdc["no_especificado"]
+        + info_rdc["no_aplica"]
+    )
+
+    # Transporte colectivo (TC)
+    info_tc = valores_indicadores["TC"]
+    TM_tc = (
+        info_tc["en_todas"]
+        + info_tc["en_alguna"]
+        + info_tc["en_ninguna"]
+        + info_tc["no_especificado"]
+        + info_tc["no_aplica"]
+    )
+
+    if TM_rdc == 0 or TM_tc == 0:
+        raise ValueError("El total de manzanas (TM) no puede ser 0. Verifica la tabla.")
+
+    if TM_rdc != TM_tc:
+        raise ValueError(
+            f"El total de manzanas calculado en 'Recubrimiento de la calle' (TM={TM_rdc}) "
+            f"no coincide con el de 'Transporte colectivo' (TM={TM_tc})."
+        )
+
+    return TM_rdc
+
+
+def calcular_puntajes_acceso(valores_indicadores: dict):
+    """
+    Calcula TM y los puntajes por indicador, de acuerdo con las fórmulas especificadas.
+    Devuelve (puntajes, TM), donde:
+    - puntajes: dict {codigo: valor_float}
+    - TM: entero con el total de manzanas
+    """
+    TM = calcular_TM(valores_indicadores)
+
+    def base(info):
+        return info["en_todas"] + 0.8 * info["en_alguna"]
+
+    puntajes = {}
+
+    # Indicadores con división directa sobre TM
+    codigos_TM_directo = [
+        "RDC",
+        "RSR",
+        "PP",
+        "BQ",
+        "GN",
+        "CV",
+        "CC",
+        "AP",
+        "LNC",
+        "TP",
+        "ARB",
+        "SP",
+        "SA",
+        "ADP",
+        "PS",
+        "PA",
+    ]
+
+    for codigo in codigos_TM_directo:
+        info = valores_indicadores[codigo]
+        puntajes[codigo] = base(info) / TM
+
+    # PTP: divide entre (TM / 3)
+    info_ptp = valores_indicadores["PTP"]
+    puntajes["PTP"] = base(info_ptp) / (TM / 3.0)
+
+    # EBC: divide entre (TM / 4)
+    info_ebc = valores_indicadores["EBC"]
+    puntajes["EBC"] = base(info_ebc) / (TM / 4.0)
+
+    # TC: divide entre (TM / 3)
+    info_tc = valores_indicadores["TC"]
+    puntajes["TC"] = base(info_tc) / (TM / 3.0)
+
+    # SRPP y SRPA: (TM - base) / TM
+    info_srpp = valores_indicadores["SRPP"]
+    puntajes["SRPP"] = (TM - base(info_srpp)) / TM
+
+    info_srpa = valores_indicadores["SRPA"]
+    puntajes["SRPA"] = (TM - base(info_srpa)) / TM
+
+    return puntajes, TM
+
+
+# --------------------------------------------------------------------
+# Sección 2: Puntos de accesibilidad y conexión
+# --------------------------------------------------------------------
+def seccion_accesibilidad_conexion():
+    st.header("Puntos de accesibilidad y conexión")
+    st.markdown(
+        """
+Pega la tabla de indicadores de accesibilidad y conexión, con los siguientes encabezados
+de columna (en este orden):
+
+Nombre del indicador  En todas  En alguna  En ninguna  No especificado  No aplica
+
+Los valores pueden tener separadores de miles con coma (por ejemplo, 1,029),
+y se convertirán automáticamente a enteros sin comas.
+
+Ejemplo de filas (los números son solo ilustrativos, pero el texto del nombre debe ser exacto):
+
+Recubrimiento de la calle 29 18 0 0 0
+Rampa para silla de ruedas 3 14 30 0 0
+
+Se ignorará cualquier otra línea, como la cabecera o la fecha de actualización.
+"""
+    )
+
+    texto_tabla = st.text_area(
+        "Pega aquí la tabla de accesibilidad y conexión:",
+        height=350,
+        placeholder=(
+            "Nombre del indicador En todas En alguna En ninguna No especificado No aplica\n"
+            "Recubrimiento de la calle 29 18 0 0 0\n"
+            "Rampa para silla de ruedas 3 14 30 0 0\n"
+            "Paso peatonal 2 28 17 0 0\n"
+            "Banqueta 14 31 2 0 0\n"
+            "Guarnición 12 34 1 0 0\n"
+            "Ciclovía 0 0 47 0 0\n"
+            "Ciclocarril 0 0 47 0 0\n"
+            "Alumbrado público 3 42 2 0 0\n"
+            "Letrero con nombre de la calle 7 36 4 0 0\n"
+            "Teléfono público 0 9 38 0 0\n"
+            "Árboles y palmeras 1 38 8 0 0\n"
+            "Semáforo para peatón 1 3 43 0 0\n"
+            "Semáforo auditivo 0 0 47 0 0\n"
+            "Parada de transporte colectivo 0 6 41 0 0\n"
+            "Estación para bicicleta 0 1 46 0 0\n"
+            "Alcantarilla de drenaje pluvial 1 12 34 0 0\n"
+            "Transporte colectivo 5 30 12 0 0\n"
+            "Sin restricción del paso a peatones 0 4 43 0 0\n"
+            "Sin restricción del paso a automóviles 0 4 43 0 0\n"
+            "Puesto semifijo 0 8 39 0 0\n"
+            "Puesto ambulante 0 12 35 0 0\n"
+            "Fecha de actualización: 2020"
+        ),
+    )
+
+    if st.button("Calcular puntos de accesibilidad y conexión"):
+        texto_limpio = (texto_tabla or "").strip()
+        if not texto_limpio:
+            st.error("Por favor, copia y pega la tabla completa de accesibilidad y conexión.")
+            return
+
+        # 1) Parsear tabla
+        valores_indicadores = parsear_tabla_accesibilidad(texto_limpio)
+
+        # 2) Validar que se encontraron los 21 indicadores
+        codigos_esperados = [cod for _, cod in INDICADORES_ACCESO]
+        codigos_encontrados = list(valores_indicadores.keys())
+
+        if len(valores_indicadores) != len(INDICADORES_ACCESO):
+            faltantes = [c for c in codigos_esperados if c not in codigos_encontrados]
+            st.error(
+                "No se detectaron correctamente todos los indicadores requeridos.\n\n"
+                "Por favor, copia y pega nuevamente la tabla completa desde "
+                "'Recubrimiento de la calle' hasta 'Puesto ambulante', "
+                "incluyendo los encabezados de columna."
+            )
+            if faltantes:
+                st.info(
+                    "Indicadores faltantes o mal detectados (por código): "
+                    + ", ".join(faltantes)
+                )
+            return
+
+        # 3) Mostrar tabla de control de los valores leídos
+        filas_valores = []
+        for nombre, codigo in INDICADORES_ACCESO:
+            info = valores_indicadores[codigo]
+            filas_valores.append(
+                {
+                    "Código": codigo,
+                    "Indicador": nombre,
+                    "En todas": info["en_todas"],
+                    "En alguna": info["en_alguna"],
+                    "En ninguna": info["en_ninguna"],
+                    "No especificado": info["no_especificado"],
+                    "No aplica": info["no_aplica"],
+                }
+            )
+
+        # 4) Calcular TM y puntajes individuales
+        try:
+            puntajes, TM = calcular_puntajes_acceso(valores_indicadores)
+        except ValueError as e:
+            st.error(str(e))
+            return
+
+        st.success(f"Total de manzanas (TM) calculado correctamente: TM = {TM}")
+
+            # 5) Calcular Puntaje Accesibilidad y Puntaje Conexiones
+        puntaje_accesibilidad = (
+            puntajes["RDC"] * 0.5
+            + puntajes["RSR"] * 2.0
+            + puntajes["PP"] * 2.0
+            + puntajes["BQ"] * 1.0
+            + puntajes["GN"] * 0.5
+            + puntajes["SA"] * 1.0
+            + puntajes["PTP"] * 1.0
+            + puntajes["SRPP"] * 2.0
+        )
+
+        puntaje_conexiones = (
+            puntajes["RDC"] * 1.0
+            + puntajes["BQ"] * 1.0
+            + puntajes["GN"] * 1.0
+            + puntajes["CV"] * 1.5
+            + puntajes["CC"] * 0.5
+            + puntajes["LNC"] * 1.0
+            + puntajes["SP"] * 1.0
+            + puntajes["PTP"] * 1.0
+            + puntajes["EBC"] * 1.0
+            + puntajes["TC"] * 1.0
+        )
+
+        # 6) Mostrar métricas para copiar y pegar
+        st.subheader("Puntajes agregados")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric(
+                label="Puntaje Accesibilidad (PA)",
+                value=f"{puntaje_accesibilidad:.2f}",
+            )
+        with col2:
+            st.metric(
+                label="Puntaje Conexiones (PC)",
+                value=f"{puntaje_conexiones:.2f}",
+            )
+        
+            # Explicación de PA y PC
+        st.markdown("""
+        ### ¿Qué evalúan PA y PC?
+
+        - **PA (Puntaje de Accesibilidad)** resume cuántas manzanas cuentan con elementos
+        que facilitan caminar y moverse con seguridad (rampas, pasos peatonales,
+        banquetas, semáforos, etc.).
+        - **PC (Puntaje de Conexiones)** resume qué tan bien conectado está el área con
+        otros puntos de la ciudad (transporte colectivo, paradas, ciclovías, estaciones
+        de bici, etc.).
+
+        Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
+        **Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas."""
+        " Con esos puntajes normalizados se construyen los índices agregados:")
+
+        st.latex(
+            r"""\small
+        PA = 0.5\cdot RDC + 2.0\cdot RSR + 2.0\cdot PP + 1.0\cdot BQ \\
+        \quad + 0.5\cdot GN + 1.0\cdot SA + 1.0\cdot PTP + 2.0\cdot SRPP
+        """,
+            width="content",
+        )
+
+        st.latex(
+            r"""\small
+        PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\cdot LNC \\
+        \quad + 1.0\cdot SP + 1.0\cdot PTP + 1.0\cdot EBC + 1.0\cdot TC
+        """,
+            width="content",
+        )
+
+
+        st.markdown("""
+        Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
+        Valores más altos de **PA** indican mejor accesibilidad peatonal; valores más altos
+        de **PC** indican mejor conexión del área con el resto de la ciudad.
+        """)
+
+
+        # 7) Tabla con el valor (puntaje) de cada variable
+        filas_puntajes = []
+        for nombre, codigo in INDICADORES_ACCESO:
+            filas_puntajes.append(
+                {
+                    "Código": codigo,
+                    "Indicador": nombre,
+                    "Puntaje": round(puntajes[codigo], 4),
+                    "Puntaje (2 decimales)": f"{puntajes[codigo]:.2f}",
+                }
+            )
+        df_puntajes = pd.DataFrame(filas_puntajes)
+
+        st.subheader("Puntaje por indicador")
+
+        # ️ AQUÍ va la tabla scroll con el mismo diseño
+        html_puntajes = df_puntajes.to_html(index=False)
+        st.markdown(
+            f'<div class="stTable tabla-scroll">{html_puntajes}</div>',
+            unsafe_allow_html=True,
+        )
+
+
+# --------------------------------------------------------------------
+# Mostrar la sección según la opción elegida
+# --------------------------------------------------------------------
+if opcion == "Porcentaje de diversidad":
+    seccion_diversidad()
+else:
+    seccion_accesibilidad_conexion()
