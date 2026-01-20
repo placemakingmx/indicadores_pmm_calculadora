@@ -217,9 +217,13 @@ Copia y pega el siguiente valor en el cuestionario.
         texto = """
         ### ¿Qué evalúa este indicador?
 
-        Este primer indicador estima la **proporción de mujeres, niñas, niños y personas adultas mayores (MNNAPAM)** dentro de la población total del área.
-        Un valor más alto indica un entorno donde hay **más personas que requieren mayor cuidado y accesibilidad** (infancias, personas mayores y mujeres).
-
+        Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área,
+        es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
+        Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta espacios
+        con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos e intergeneracionales**. 
+        
+        Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan apropiarse del lugar en forma digna y segura.
+        """
         ### Fórmula utilizada
 
         Usando los datos de INEGI:
