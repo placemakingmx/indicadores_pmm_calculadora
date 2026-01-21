@@ -82,11 +82,11 @@ st.image("uploads/tutorial.gif", width=700)
 st.markdown("---")
 
 # --------------------------------------------------------------------
-# Selector de tipo de consulta
+# Selector de tipo de consulta + estado
 # --------------------------------------------------------------------
 st.subheader("Indicadores a utilizar")
 
-# --- Inicializar variables de estado ---
+# Inicializar variables de estado
 if "resultado_diversidad" not in st.session_state:
     st.session_state["resultado_diversidad"] = None
     st.session_state["tabla_diversidad"] = None
@@ -96,14 +96,14 @@ if "resultado_PA" not in st.session_state:
     st.session_state["resultado_PC"] = None
     st.session_state["tabla_acceso"] = None
 
-# Radio con clave para poder detectar cambios
+# Radio con key para poder detectar cambios
 opcion = st.radio(
     "Selecciona qué quieres calcular:",
     ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
     key="opcion_radio",
 )
 
-# Detectar cambio de opción y limpiar resultados del otro indicador
+# Detectar cambio de opción y limpiar resultados del indicador opuesto
 if "opcion_anterior" not in st.session_state:
     st.session_state["opcion_anterior"] = opcion
 else:
@@ -135,8 +135,7 @@ ETIQUETAS = [
 ]
 
 def extraer_valores(texto: str):
-    """
-    Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
+    """Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
     Devuelve un dict con claves = códigos (PT, PF...) y valores = int.
     """
     valores = {}
@@ -151,17 +150,45 @@ def extraer_valores(texto: str):
                 pass
     return valores
 
+
 # --------------------------------------------------------------------
 # Sección 1: Porcentaje de diversidad (MNNAPAM)
 # --------------------------------------------------------------------
 def seccion_diversidad():
-    st.header("Porcentaje de diversidad")
-    st.markdown("""...tu texto de instrucciones...""")
+    st.header("Porcentaje de diversidad (MNNAPAM)")
+
+    st.markdown(
+        """
+Pega el bloque de texto que contenga, con estas etiquetas **exactas**
+(puede haber líneas extra, pero se deben mantener estas líneas y nombres):
+
+- Población total  
+- Población femenina  
+- Población masculina  
+- Población de 0 a 14 años  
+- Población de 15 a 29 años  
+- Población de 30 a 59 años  
+- Población de 60 años y más  
+- Población con discapacidad  
+
+Los valores pueden venir con separadores de miles con coma (por ejemplo, 6,822),
+y se convertirán automáticamente a enteros sin comas.
+        """
+    )
 
     texto = st.text_area(
         "Pega aquí el texto con los datos de población:",
         height=220,
-        placeholder=( "Población total 6,822\n" "Población femenina 3,597\n" ... ),
+        placeholder=(
+            "Población total 6,822\n"
+            "Población femenina 3,597\n"
+            "Población masculina 3,224\n"
+            "Población de 0 a 14 años 1,302\n"
+            "Población de 15 a 29 años 1,723\n"
+            "Población de 30 a 59 años 2,781\n"
+            "Población de 60 años y más 1,009\n"
+            "Población con discapacidad 264"
+        ),
         key="texto_diversidad",
     )
 
@@ -172,11 +199,14 @@ def seccion_diversidad():
             return
 
         valores = extraer_valores(texto_limpio)
+
+        # Validar que se encontraron las 8 variables
         if len(valores) != len(ETIQUETAS):
             faltantes = [cod for _, cod in ETIQUETAS if cod not in valores]
             st.error(
                 "No se detectaron correctamente los 8 valores requeridos. "
-                "Por favor, copia y pega nuevamente el bloque completo."
+                "Por favor, copia y pega nuevamente el bloque completo desde "
+                "'Población total' hasta 'Población con discapacidad'."
             )
             if faltantes:
                 st.info("Variables faltantes o mal detectadas: " + ", ".join(faltantes))
@@ -186,18 +216,19 @@ def seccion_diversidad():
         PF = valores["PF"]
         PM = valores["PM"]
         NNA = valores["NNA"]
-        PJ  = valores["PJ"]
-        PA  = valores["PA"]
+        PJ = valores["PJ"]
+        PA = valores["PA"]
         PAM = valores["PAM"]
-        PD  = valores["PD"]
+        PD = valores["PD"]
 
         if PT == 0:
             st.error("La Población total (PT) no puede ser 0. Verifica los datos.")
             return
 
+        # Cálculo de la proporción MNNAPAM
         mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT) * 10
 
-        # Construir la tabla de distribución
+        # Construcción de la tabla
         filas = []
         for etiqueta, codigo in ETIQUETAS:
             valor_abs = valores[codigo]
@@ -205,6 +236,7 @@ def seccion_diversidad():
                 porcentaje = 100.0
             else:
                 porcentaje = (valor_abs / PT) * 100.0
+
             filas.append(
                 {
                     "Código": codigo,
@@ -215,11 +247,11 @@ def seccion_diversidad():
             )
         df = pd.DataFrame(filas)
 
-        # Guardar resultados en session_state
+        # Guardar en session_state
         st.session_state["resultado_diversidad"] = mnn_pam
         st.session_state["tabla_diversidad"] = df
 
-    # Mostrar resultados SOLO si hay algo guardado
+    # Mostrar resultados solo si hay algo guardado
     if st.session_state["resultado_diversidad"] is not None:
         mnn_pam = st.session_state["resultado_diversidad"]
         df = st.session_state["tabla_diversidad"]
@@ -227,35 +259,34 @@ def seccion_diversidad():
         st.markdown(
             f"""
 La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
-respecto al total de la población es de **{mnn_pam:.2f}**.
-
+respecto al total de la población es de **{mnn_pam:.2f}**.  
 Copia y pega el siguiente valor en el cuestionario.
-"""
+            """
         )
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
 
-        # Texto explicativo y fórmula
         texto_exp = """
 ### ¿Qué evalúa este indicador?
 
 Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área,
 es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
+Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad.
 
-Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta
-espacios con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos
-e intergeneracionales**. Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan
-apropiarse del lugar en forma digna y segura.
+El **Placemaking** interpreta espacios con mayores índices de diversidad como contextos
+**más propicios para generar lugares seguros, inclusivos e intergeneracionales**.
+Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos
+puedan apropiarse del lugar en forma digna y segura.
 
 ### Fórmula utilizada
 
 Usando los datos de INEGI:
 
-- **PT**: Población total
-- **PF**: Población femenina
-- **PM**: Población masculina
-- **NNA**: Población de 0 a 14 años
-- **PAM**: Población de 60 años y más
-"""
+- **PT**: Población total  
+- **PF**: Población femenina  
+- **PM**: Población masculina  
+- **NNA**: Población de 0 a 14 años  
+- **PAM**: Población de 60 años y más  
+        """
         st.markdown(texto_exp)
 
         st.latex(
@@ -270,29 +301,12 @@ El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujere
 
 ### ¿Por qué es una aproximación?
 
-Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente** cuántas niñas/niños
-ni cuántas mujeres/hombres mayores hay. Esto hace que el indicador sea una **estimación razonable y comparable**,
-pero no un conteo exacto por género.
-"""
+Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente**
+cuántas niñas/niños ni cuántas mujeres/hombres mayores hay. Esto hace que el indicador sea una
+**estimación razonable y comparable**, pero no un conteo exacto por género.
+            """
         )
 
-        # Construcción de la tabla
-        filas = []
-        for etiqueta, codigo in ETIQUETAS:
-            valor_abs = valores[codigo]
-            if codigo == "PT":
-                porcentaje = 100.0
-            else:
-                porcentaje = (valor_abs / PT) * 100.0
-            filas.append(
-                {
-                    "Código": codigo,
-                    "Variable": etiqueta,
-                    "Valor absoluto": valor_abs,
-                    "Porcentaje sobre PT": f"{porcentaje:.2f} %",
-                }
-            )
-        df = pd.DataFrame(filas)
         st.subheader("Distribución porcentual respecto a la población total")
         html_table = df.to_html(index=False)
         st.markdown(
@@ -300,9 +314,10 @@ pero no un conteo exacto por género.
 <div class="stTable tabla-scroll">
 {html_table}
 </div>
-""",
+            """,
             unsafe_allow_html=True,
         )
+
 
 # --------------------------------------------------------------------
 # Definición de indicadores de accesibilidad / conexión
@@ -332,10 +347,7 @@ INDICADORES_ACCESO = [
 ]
 
 def parsear_tabla_accesibilidad(texto: str):
-    """
-    Busca en el texto cada indicador de accesibilidad/conexión y extrae los 5 enteros
-    (En todas, En alguna, En ninguna, No especificado, No aplica).
-    """
+    """Busca en el texto cada indicador y extrae los 5 enteros."""
     valores = {}
     for nombre, codigo in INDICADORES_ACCESO:
         patron = rf"^{re.escape(nombre)}\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$"
@@ -391,17 +403,14 @@ def calcular_TM(valores_indicadores: dict) -> int:
 
     if TM_rdc != TM_tc:
         raise ValueError(
-            f"El total de manzanas calculado en 'Recubrimiento de la calle' (TM={TM_rdc}) "
+            f"El total de manzanas en 'Recubrimiento de la calle' (TM={TM_rdc}) "
             f"no coincide con el de 'Transporte colectivo' (TM={TM_tc})."
         )
 
     return TM_rdc
 
 def calcular_puntajes_acceso(valores_indicadores: dict):
-    """
-    Calcula TM y los puntajes por indicador, de acuerdo con las fórmulas especificadas.
-    Devuelve (puntajes, TM).
-    """
+    """Calcula TM y los puntajes por indicador. Devuelve (puntajes, TM)."""
     TM = calcular_TM(valores_indicadores)
 
     def base(info):
@@ -410,24 +419,9 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
     puntajes = {}
 
     codigos_TM_directo = [
-        "RDC",
-        "RSR",
-        "PP",
-        "BQ",
-        "GN",
-        "CV",
-        "CC",
-        "AP",
-        "LNC",
-        "TP",
-        "ARB",
-        "SP",
-        "SA",
-        "ADP",
-        "PS",
-        "PA",
+        "RDC", "RSR", "PP", "BQ", "GN", "CV", "CC", "AP",
+        "LNC", "TP", "ARB", "SP", "SA", "ADP", "PS", "PA",
     ]
-
     for codigo in codigos_TM_directo:
         info = valores_indicadores[codigo]
         puntajes[codigo] = base(info) / TM
@@ -449,17 +443,60 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
 
     return puntajes, TM
 
+
 # --------------------------------------------------------------------
 # Sección 2: Puntos de accesibilidad y conexión
 # --------------------------------------------------------------------
 def seccion_accesibilidad_conexion():
     st.header("Puntos de accesibilidad y conexión")
-    st.markdown("""...texto de instrucciones...""")
+
+    st.markdown(
+        """
+Pega la tabla de indicadores de accesibilidad y conexión, con los siguientes encabezados
+de columna (en este orden):
+
+`Nombre del indicador En todas En alguna En ninguna No especificado No aplica`
+
+Los valores pueden tener separadores de miles con coma (por ejemplo, 1,029),
+y se convertirán automáticamente a enteros sin comas.
+
+Ejemplo de filas (los números son solo ilustrativos, pero el texto del nombre debe ser exacto):
+
+`Recubrimiento de la calle 29 18 0 0 0`  
+`Rampa para silla de ruedas 3 14 30 0 0`
+
+Se ignorará cualquier otra línea, como la cabecera o la fecha de actualización.
+        """
+    )
 
     texto_tabla = st.text_area(
         "Pega aquí la tabla de accesibilidad y conexión:",
         height=350,
-        placeholder=( "Nombre del indicador En todas En alguna En ninguna No especificado No aplica\n" "...", ),
+        placeholder=(
+            "Nombre del indicador En todas En alguna En ninguna No especificado No aplica\n"
+            "Recubrimiento de la calle 29 18 0 0 0\n"
+            "Rampa para silla de ruedas 3 14 30 0 0\n"
+            "Paso peatonal 2 28 17 0 0\n"
+            "Banqueta 14 31 2 0 0\n"
+            "Guarnición 12 34 1 0 0\n"
+            "Ciclovía 0 0 47 0 0\n"
+            "Ciclocarril 0 0 47 0 0\n"
+            "Alumbrado público 3 42 2 0 0\n"
+            "Letrero con nombre de la calle 7 36 4 0 0\n"
+            "Teléfono público 0 9 38 0 0\n"
+            "Árboles y palmeras 1 38 8 0 0\n"
+            "Semáforo para peatón 1 3 43 0 0\n"
+            "Semáforo auditivo 0 0 47 0 0\n"
+            "Parada de transporte colectivo 0 6 41 0 0\n"
+            "Estación para bicicleta 0 1 46 0 0\n"
+            "Alcantarilla de drenaje pluvial 1 12 34 0 0\n"
+            "Transporte colectivo 5 30 12 0 0\n"
+            "Sin restricción del paso a peatones 0 4 43 0 0\n"
+            "Sin restricción del paso a automóviles 0 4 43 0 0\n"
+            "Puesto semifijo 0 8 39 0 0\n"
+            "Puesto ambulante 0 12 35 0 0\n"
+            "Fecha de actualización: 2020"
+        ),
         key="texto_acceso",
     )
 
@@ -470,6 +507,7 @@ def seccion_accesibilidad_conexion():
             return
 
         valores_indicadores = parsear_tabla_accesibilidad(texto_limpio)
+
         codigos_esperados = [cod for _, cod in INDICADORES_ACCESO]
         codigos_encontrados = list(valores_indicadores.keys())
 
@@ -477,7 +515,9 @@ def seccion_accesibilidad_conexion():
             faltantes = [c for c in codigos_esperados if c not in codigos_encontrados]
             st.error(
                 "No se detectaron correctamente todos los indicadores requeridos.\n\n"
-                "Por favor, copia y pega nuevamente la tabla completa."
+                "Por favor, copia y pega nuevamente la tabla completa desde "
+                "'Recubrimiento de la calle' hasta 'Puesto ambulante', "
+                "incluyendo los encabezados de columna."
             )
             if faltantes:
                 st.info("Indicadores faltantes o mal detectados (por código): " + ", ".join(faltantes))
@@ -489,28 +529,30 @@ def seccion_accesibilidad_conexion():
             st.error(str(e))
             return
 
+        st.success(f"Total de manzanas (TM) calculado correctamente: TM = {TM}")
+
         puntaje_accesibilidad = (
-            puntajes["RDC"] * 0.5 +
-            puntajes["RSR"] * 2.0 +
-            puntajes["PP"]  * 2.0 +
-            puntajes["BQ"]  * 1.0 +
-            puntajes["GN"]  * 0.5 +
-            puntajes["SA"]  * 1.0 +
-            puntajes["PTP"] * 1.0 +
-            puntajes["SRPP"]* 2.0
+            puntajes["RDC"] * 0.5
+            + puntajes["RSR"] * 2.0
+            + puntajes["PP"] * 2.0
+            + puntajes["BQ"] * 1.0
+            + puntajes["GN"] * 0.5
+            + puntajes["SA"] * 1.0
+            + puntajes["PTP"] * 1.0
+            + puntajes["SRPP"] * 2.0
         )
 
         puntaje_conexiones = (
-            puntajes["RDC"] * 1.0 +
-            puntajes["BQ"]  * 1.0 +
-            puntajes["GN"]  * 1.0 +
-            puntajes["CV"]  * 1.5 +
-            puntajes["CC"]  * 0.5 +
-            puntajes["LNC"] * 1.0 +
-            puntajes["SP"]  * 1.0 +
-            puntajes["PTP"] * 1.0 +
-            puntajes["EBC"] * 1.0 +
-            puntajes["TC"]  * 1.0
+            puntajes["RDC"] * 1.0
+            + puntajes["BQ"] * 1.0
+            + puntajes["GN"] * 1.0
+            + puntajes["CV"] * 1.5
+            + puntajes["CC"] * 0.5
+            + puntajes["LNC"] * 1.0
+            + puntajes["SP"] * 1.0
+            + puntajes["PTP"] * 1.0
+            + puntajes["EBC"] * 1.0
+            + puntajes["TC"] * 1.0
         )
 
         filas_puntajes = []
@@ -525,32 +567,24 @@ def seccion_accesibilidad_conexion():
             )
         df_puntajes = pd.DataFrame(filas_puntajes)
 
-        # Guardar resultados en session_state
+        # Guardar en session_state
         st.session_state["resultado_PA"] = puntaje_accesibilidad
         st.session_state["resultado_PC"] = puntaje_conexiones
         st.session_state["tabla_acceso"] = df_puntajes
 
-    # Mostrar resultados SOLO si hay algo guardado
+    # Mostrar resultados solo si hay algo guardado
     if st.session_state["resultado_PA"] is not None and st.session_state["resultado_PC"] is not None:
         pa = st.session_state["resultado_PA"]
         pc = st.session_state["resultado_PC"]
         df_puntajes = st.session_state["tabla_acceso"]
 
-        # 6) Mostrar métricas para copiar y pegar
         st.subheader("Puntajes agregados")
         col1, col2 = st.columns(2)
         with col1:
-            st.metric(
-                label="Puntaje Accesibilidad (PA)",
-                value=f"{puntaje_accesibilidad:.2f}",
-            )
+            st.metric("Puntaje Accesibilidad (PA)", f"{pa:.2f}")
         with col2:
-            st.metric(
-                label="Puntaje Conexiones (PC)",
-                value=f"{puntaje_conexiones:.2f}",
-            )
+            st.metric("Puntaje Conexiones (PC)", f"{pc:.2f}")
 
-        # Explicación de PA y PC
         st.markdown(
             """
 ### ¿Qué evalúan PA y PC?
@@ -560,9 +594,8 @@ def seccion_accesibilidad_conexion():
 
 Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
 **Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas.
-
 Con esos puntajes normalizados se construyen los índices agregados:
-"""
+            """
         )
 
         st.latex(
@@ -581,24 +614,11 @@ PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\
         st.markdown(
             """
 Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
-Valores más altos de **PA** indican mejor accesibilidad peatonal; valores más altos de **PC**
-indican mejor conexión del área con el resto de la ciudad.
-"""
+Valores más altos de **PA** indican mejor accesibilidad peatonal;
+valores más altos de **PC** indican mejor conexión del área con el resto de la ciudad.
+            """
         )
 
-        # 7) Tabla con el valor (puntaje) de cada variable
-        filas_puntajes = []
-        for nombre, codigo in INDICADORES_ACCESO:
-            filas_puntajes.append(
-                {
-                    "Código": codigo,
-                    "Indicador": nombre,
-                    "Puntaje": round(puntajes[codigo], 4),
-                    "Puntaje (2 decimales)": f"{puntajes[codigo]:.2f}",
-                }
-            )
-
-        df_puntajes = pd.DataFrame(filas_puntajes)
         st.subheader("Puntaje por indicador")
         html_puntajes = df_puntajes.to_html(index=False)
         st.markdown(
