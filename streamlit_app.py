@@ -233,10 +233,15 @@ y se convertirán automáticamente a enteros sin comas.
         st.session_state["resultado_diversidad"] = mnn_pam
         st.session_state["tabla_diversidad"] = df
 
-    # Mostrar resultados solo si hay algo guardado
-    if st.session_state["resultado_diversidad"] is not None:
-        mnn_pam = st.session_state["resultado_diversidad"]
-        df = st.session_state["tabla_diversidad"]
+    # Mostrar resultados SOLO si:
+# - hay algo guardado Y
+# - el radio actual está en "Porcentaje de diversidad"
+if (
+    st.session_state.get("resultado_diversidad") is not None
+    and st.session_state.get("opcion_radio") == "Porcentaje de diversidad"
+):
+    mnn_pam = st.session_state["resultado_diversidad"]
+    df = st.session_state["tabla_diversidad"]
 
         st.markdown(
             f"""
@@ -568,13 +573,31 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
         st.session_state["resultado_PA"] = puntaje_accesibilidad
         st.session_state["resultado_PC"] = puntaje_conexiones
         st.session_state["tabla_acceso"] = df_puntajes
-
-    # Mostrar resultados solo si hay algo guardado
-    if st.session_state["resultado_PA"] is not None and st.session_state["resultado_PC"] is not None:
+        
+    # Mostrar resultados SOLO si:
+    # - hay algo guardado Y
+    # - el radio actual está en "Puntos de accesibilidad y conexión"
+    if (
+        st.session_state.get("resultado_PA") is not None
+        and st.session_state.get("resultado_PC") is not None
+        and st.session_state.get("opcion_radio") == "Puntos de accesibilidad y conexión"
+    ):
         pa = st.session_state["resultado_PA"]
         pc = st.session_state["resultado_PC"]
         df_puntajes = st.session_state["tabla_acceso"]
-
+    
+        st.subheader("Puntajes agregados")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Puntaje Accesibilidad (PA)", f"{pa:.2f}")
+        with col2:
+            st.metric("Puntaje Conexiones (PC)", f"{pc:.2f}")
+            
+    if st.session_state["resultado_PA"] is not None and st.session_state["resultado_PC"] is not None:
+            pa = st.session_state["resultado_PA"]
+            pc = st.session_state["resultado_PC"]
+            df_puntajes = st.session_state["tabla_acceso"]
+    
         st.subheader("Puntajes agregados")
         col1, col2 = st.columns(2)
         with col1:
