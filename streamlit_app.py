@@ -243,7 +243,7 @@ if (
     mnn_pam = st.session_state["resultado_diversidad"]
     df = st.session_state["tabla_diversidad"]
 
-        st.markdown(
+st.markdown(
             f"""
 La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
 respecto al total de la población es de **{mnn_pam:.2f}**.  
