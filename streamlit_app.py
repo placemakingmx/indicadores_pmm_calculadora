@@ -1,7 +1,9 @@
 from pathlib import Path
-import streamlit as st
-import pandas as pd
+import os
 import re
+
+import pandas as pd
+import streamlit as st
 
 # --------------------------------------------------------------------
 # Rutas base (para logo y CSS)
@@ -13,9 +15,7 @@ CSS_PATH = BASE_DIR / "uploads" / "styles.css"
 # --------------------------------------------------------------------
 # Configuración de la página (título, icono, layout)
 # --------------------------------------------------------------------
-import os
 icon_path = "uploads/carita.png"
-
 st.set_page_config(
     page_title="Indicadores del lugar",
     page_icon=icon_path if os.path.exists(icon_path) else None,
@@ -77,7 +77,6 @@ st.link_button(
 st.markdown("---")
 st.subheader("Tutorial:")
 st.markdown("Este GIF te muestra cómo obtener la información desde la página del INEGI.")
-
 # GIF del tutorial entre los separadores
 st.image("uploads/tutorial.gif", width=700)
 st.markdown("---")
@@ -105,7 +104,6 @@ ETIQUETAS = [
     ("Población con discapacidad", "PD"),
 ]
 
-
 def extraer_valores(texto: str):
     """
     Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
@@ -113,7 +111,6 @@ def extraer_valores(texto: str):
     """
     valores = {}
     for etiqueta, codigo in ETIQUETAS:
-        # Busca: 'Etiqueta' seguido de espacios y un número que puede tener comas (ej. 6,822)
         patron = rf"{re.escape(etiqueta)}\s+([\d,]+)\b"
         coincidencia = re.search(patron, texto)
         if coincidencia:
@@ -121,16 +118,15 @@ def extraer_valores(texto: str):
             try:
                 valores[codigo] = int(num_str)
             except ValueError:
-                # Si por alguna razón no es entero, se considera no encontrado
                 pass
     return valores
-
 
 # --------------------------------------------------------------------
 # Sección 1: Porcentaje de diversidad (MNNAPAM)
 # --------------------------------------------------------------------
 def seccion_diversidad():
     st.header("Porcentaje de diversidad")
+
     st.markdown(
         """
 Pega el bloque de texto que contenga, con estas etiquetas **exactas**
@@ -199,8 +195,7 @@ y se convertirán automáticamente a enteros sin comas.
             return
 
         # Cálculo de la proporción MNNAPAM
-        # Fórmula: (PF + NNA*(PM/PT) + PAM*(PM/PT)) / PT
-        mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT)*10
+        mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT) * 10
 
         st.markdown(
             f"""
@@ -210,46 +205,49 @@ respecto al total de la población es de **{mnn_pam:.2f}**.
 Copia y pega el siguiente valor en el cuestionario.
 """
         )
-
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
 
-        # 2. Texto base con los placeholders
-        texto = """
-        ### ¿Qué evalúa este indicador?
-        
-        Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área, es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
-        
-        Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta espacios con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos e intergeneracionales**. Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan apropiarse del lugar en forma digna y segura.
-        
-        ### Fórmula utilizada
-        
-        Usando los datos de INEGI:  
-        **PT**: Población total  
-        **PF**: Población femenina  
-        **PM**: Población masculina  
-        **NNA**: Población de 0 a 14 años  
-        **PAM**: Población de 60 años y más
-        """
-        
-        # 4. Mostrar el texto explicativo y la fórmula
-        st.markdown(texto)
-        
-        st.latex(r"""
-        \text{MNNAPAM} = \frac{
-        PF + NNA \cdot \frac{PM}{PT} + PAM \cdot \frac{PM}{PT}
-        }{PT} \times 10
-        """)
+        # Texto explicativo y fórmula
+        texto_exp = """
+### ¿Qué evalúa este indicador?
 
-        # 6. Mostrar el resto del texto, usando LATEX_5 ya reemplazado
-        texto2 = """
-        El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujeres, niñas, niños y personas mayores.
+Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área,
+es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
 
-        ### ¿Por qué es una aproximación?
+Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad. El **Placemaking** interpreta
+espacios con mayores índices de diversidad como contextos **más propicios para generar lugares seguros, inclusivos
+e intergeneracionales**. Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos puedan
+apropiarse del lugar en forma digna y segura.
 
-        Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente** cuántas niñas/niños ni cuántas mujeres/hombres mayores hay.
-        Por eso se usa la proporción general de hombres <<LATEX_5>> para estimar la parte masculina de esos grupos.
-        Esto hace que el indicador sea una **estimación razonable y comparable**, pero no un conteo exacto por género.
-        """
+### Fórmula utilizada
+
+Usando los datos de INEGI:
+
+- **PT**: Población total
+- **PF**: Población femenina
+- **PM**: Población masculina
+- **NNA**: Población de 0 a 14 años
+- **PAM**: Población de 60 años y más
+"""
+        st.markdown(texto_exp)
+
+        st.latex(
+            r"""
+\text{MNNAPAM} = \frac{ PF + NNA \cdot \frac{PM}{PT} + PAM \cdot \frac{PM}{PT} }{PT} \times 10
+"""
+        )
+
+        st.markdown(
+            """
+El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujeres, niñas, niños y personas mayores.
+
+### ¿Por qué es una aproximación?
+
+Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente** cuántas niñas/niños
+ni cuántas mujeres/hombres mayores hay. Esto hace que el indicador sea una **estimación razonable y comparable**,
+pero no un conteo exacto por género.
+"""
+        )
 
         # Construcción de la tabla
         filas = []
@@ -259,7 +257,6 @@ Copia y pega el siguiente valor en el cuestionario.
                 porcentaje = 100.0
             else:
                 porcentaje = (valor_abs / PT) * 100.0
-
             filas.append(
                 {
                     "Código": codigo,
@@ -268,19 +265,16 @@ Copia y pega el siguiente valor en el cuestionario.
                     "Porcentaje sobre PT": f"{porcentaje:.2f} %",
                 }
             )
-
         df = pd.DataFrame(filas)
         st.subheader("Distribución porcentual respecto a la población total")
-        # df es tu DataFrame
         html_table = df.to_html(index=False)
-
         st.markdown(
             f"""
-            <div class="stTable tabla-scroll">
-                {html_table}
-            </div>
-            """,
-            unsafe_allow_html=True
+<div class="stTable tabla-scroll">
+{html_table}
+</div>
+""",
+            unsafe_allow_html=True,
         )
 
 # --------------------------------------------------------------------
@@ -310,39 +304,19 @@ INDICADORES_ACCESO = [
     ("Puesto ambulante", "PA"),
 ]
 
-
 def parsear_tabla_accesibilidad(texto: str):
     """
     Busca en el texto cada indicador de accesibilidad/conexión y extrae los 5 enteros
-    (En todas, En alguna, En ninguna, No especificado, No aplica),
-    permitiendo separadores de miles con comas.
-
-    Devuelve un dict:
-    {
-        "RDC": {
-            "codigo": "RDC",
-            "nombre": "...",
-            "en_todas": int,
-            "en_alguna": int,
-            "en_ninguna": int,
-            "no_especificado": int,
-            "no_aplica": int,
-        },
-        ...
-    }
+    (En todas, En alguna, En ninguna, No especificado, No aplica).
     """
     valores = {}
-
     for nombre, codigo in INDICADORES_ACCESO:
-        # Patrón: Nombre + 5 números (con o sin comas) separados por espacios
         patron = rf"^{re.escape(nombre)}\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s*$"
         encontrado = False
-
         for linea in texto.splitlines():
             linea = linea.strip()
             if not linea:
                 continue
-
             m = re.match(patron, linea)
             if m:
                 en_todas = int(m.group(1).replace(",", ""))
@@ -350,7 +324,6 @@ def parsear_tabla_accesibilidad(texto: str):
                 en_ninguna = int(m.group(3).replace(",", ""))
                 no_especificado = int(m.group(4).replace(",", ""))
                 no_aplica = int(m.group(5).replace(",", ""))
-
                 valores[codigo] = {
                     "codigo": codigo,
                     "nombre": nombre,
@@ -362,20 +335,12 @@ def parsear_tabla_accesibilidad(texto: str):
                 }
                 encontrado = True
                 break
-
-        # Si no se encontró la línea correspondiente a este indicador,
-        # no se añade al dict; se reportará después.
         if not encontrado:
             continue
-
     return valores
 
-
 def calcular_TM(valores_indicadores: dict) -> int:
-    """
-    Calcula TM a partir de RDC y TC y verifica que sean iguales.
-    """
-    # Recubrimiento de la calle (RDC)
+    """Calcula TM a partir de RDC y TC y verifica que sean iguales."""
     info_rdc = valores_indicadores["RDC"]
     TM_rdc = (
         info_rdc["en_todas"]
@@ -385,7 +350,6 @@ def calcular_TM(valores_indicadores: dict) -> int:
         + info_rdc["no_aplica"]
     )
 
-    # Transporte colectivo (TC)
     info_tc = valores_indicadores["TC"]
     TM_tc = (
         info_tc["en_todas"]
@@ -406,13 +370,10 @@ def calcular_TM(valores_indicadores: dict) -> int:
 
     return TM_rdc
 
-
 def calcular_puntajes_acceso(valores_indicadores: dict):
     """
     Calcula TM y los puntajes por indicador, de acuerdo con las fórmulas especificadas.
-    Devuelve (puntajes, TM), donde:
-    - puntajes: dict {codigo: valor_float}
-    - TM: entero con el total de manzanas
+    Devuelve (puntajes, TM).
     """
     TM = calcular_TM(valores_indicadores)
 
@@ -421,7 +382,6 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
 
     puntajes = {}
 
-    # Indicadores con división directa sobre TM
     codigos_TM_directo = [
         "RDC",
         "RSR",
@@ -445,19 +405,15 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
         info = valores_indicadores[codigo]
         puntajes[codigo] = base(info) / TM
 
-    # PTP: divide entre (TM / 3)
     info_ptp = valores_indicadores["PTP"]
     puntajes["PTP"] = base(info_ptp) / (TM / 3.0)
 
-    # EBC: divide entre (TM / 4)
     info_ebc = valores_indicadores["EBC"]
     puntajes["EBC"] = base(info_ebc) / (TM / 4.0)
 
-    # TC: divide entre (TM / 3)
     info_tc = valores_indicadores["TC"]
     puntajes["TC"] = base(info_tc) / (TM / 3.0)
 
-    # SRPP y SRPA: (TM - base) / TM
     info_srpp = valores_indicadores["SRPP"]
     puntajes["SRPP"] = (TM - base(info_srpp)) / TM
 
@@ -466,18 +422,18 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
 
     return puntajes, TM
 
-
 # --------------------------------------------------------------------
 # Sección 2: Puntos de accesibilidad y conexión
 # --------------------------------------------------------------------
 def seccion_accesibilidad_conexion():
     st.header("Puntos de accesibilidad y conexión")
+
     st.markdown(
         """
 Pega la tabla de indicadores de accesibilidad y conexión, con los siguientes encabezados
 de columna (en este orden):
 
-Nombre del indicador  En todas  En alguna  En ninguna  No especificado  No aplica
+Nombre del indicador En todas En alguna En ninguna No especificado No aplica
 
 Los valores pueden tener separadores de miles con coma (por ejemplo, 1,029),
 y se convertirán automáticamente a enteros sin comas.
@@ -549,22 +505,6 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                 )
             return
 
-        # 3) Mostrar tabla de control de los valores leídos
-        filas_valores = []
-        for nombre, codigo in INDICADORES_ACCESO:
-            info = valores_indicadores[codigo]
-            filas_valores.append(
-                {
-                    "Código": codigo,
-                    "Indicador": nombre,
-                    "En todas": info["en_todas"],
-                    "En alguna": info["en_alguna"],
-                    "En ninguna": info["en_ninguna"],
-                    "No especificado": info["no_especificado"],
-                    "No aplica": info["no_aplica"],
-                }
-            )
-
         # 4) Calcular TM y puntajes individuales
         try:
             puntajes, TM = calcular_puntajes_acceso(valores_indicadores)
@@ -574,7 +514,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
 
         st.success(f"Total de manzanas (TM) calculado correctamente: TM = {TM}")
 
-            # 5) Calcular Puntaje Accesibilidad y Puntaje Conexiones
+        # 5) Calcular Puntaje Accesibilidad y Puntaje Conexiones
         puntaje_accesibilidad = (
             puntajes["RDC"] * 0.5
             + puntajes["RSR"] * 2.0
@@ -612,45 +552,42 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                 label="Puntaje Conexiones (PC)",
                 value=f"{puntaje_conexiones:.2f}",
             )
-        
-            # Explicación de PA y PC
-        st.markdown("""
-        ### ¿Qué evalúan PA y PC?
 
-        - **PA (Puntaje de Accesibilidad)** resume cuántas manzanas cuentan con elementos
-        que facilitan caminar y moverse con seguridad (rampas, pasos peatonales,
-        banquetas, semáforos, etc.).
-        - **PC (Puntaje de Conexiones)** resume qué tan bien conectado está el área con
-        otros puntos de la ciudad (transporte colectivo, paradas, ciclovías, estaciones
-        de bici, etc.).
+        # Explicación de PA y PC
+        st.markdown(
+            """
+### ¿Qué evalúan PA y PC?
 
-        Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
-        **Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas."""
-        " Con esos puntajes normalizados se construyen los índices agregados:")
+- **PA (Puntaje de Accesibilidad)** resume cuántas manzanas cuentan con elementos que facilitan caminar y moverse con seguridad (rampas, pasos peatonales, banquetas, semáforos, etc.).
+- **PC (Puntaje de Conexiones)** resume qué tan bien conectado está el área con otros puntos de la ciudad (transporte colectivo, paradas, ciclovías, estaciones de bici, etc.).
 
-        st.latex(
-            r"""\small
-        PA = 0.5\cdot RDC + 2.0\cdot RSR + 2.0\cdot PP + 1.0\cdot BQ \\
-        \quad + 0.5\cdot GN + 1.0\cdot SA + 1.0\cdot PTP + 2.0\cdot SRPP
-        """,
-            width="content",
+Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
+**Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas.
+
+Con esos puntajes normalizados se construyen los índices agregados:
+"""
         )
 
         st.latex(
             r"""\small
-        PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\cdot LNC \\
-        \quad + 1.0\cdot SP + 1.0\cdot PTP + 1.0\cdot EBC + 1.0\cdot TC
-        """,
-            width="content",
+PA = 0.5\cdot RDC + 2.0\cdot RSR + 2.0\cdot PP + 1.0\cdot BQ
++ 0.5\cdot GN + 1.0\cdot SA + 1.0\cdot PTP + 2.0\cdot SRPP
+"""
+        )
+        st.latex(
+            r"""\small
+PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\cdot LNC
++ 1.0\cdot SP + 1.0\cdot PTP + 1.0\cdot EBC + 1.0\cdot TC
+"""
         )
 
-
-        st.markdown("""
-        Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
-        Valores más altos de **PA** indican mejor accesibilidad peatonal; valores más altos
-        de **PC** indican mejor conexión del área con el resto de la ciudad.
-        """)
-
+        st.markdown(
+            """
+Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
+Valores más altos de **PA** indican mejor accesibilidad peatonal; valores más altos de **PC**
+indican mejor conexión del área con el resto de la ciudad.
+"""
+        )
 
         # 7) Tabla con el valor (puntaje) de cada variable
         filas_puntajes = []
@@ -663,22 +600,22 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                     "Puntaje (2 decimales)": f"{puntajes[codigo]:.2f}",
                 }
             )
+
         df_puntajes = pd.DataFrame(filas_puntajes)
-
         st.subheader("Puntaje por indicador")
-
-        # ️ AQUÍ va la tabla scroll con el mismo diseño
         html_puntajes = df_puntajes.to_html(index=False)
         st.markdown(
             f'<div class="stTable tabla-scroll">{html_puntajes}</div>',
             unsafe_allow_html=True,
         )
 
-
 # --------------------------------------------------------------------
 # Mostrar la sección según la opción elegida
 # --------------------------------------------------------------------
 if opcion == "Porcentaje de diversidad":
+    # Aquí NO se llama a la sección de accesibilidad,
+    # así que PA y PC desaparecen cuando cambias el radio.
     seccion_diversidad()
 else:
+    # Aquí NO se llama a diversidad, así que MNNAPAM desaparece al cambiar el radio.
     seccion_accesibilidad_conexion()
