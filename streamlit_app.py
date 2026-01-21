@@ -76,6 +76,7 @@ st.link_button(
 st.markdown("---")
 st.subheader("Tutorial:")
 st.markdown("Este GIF te muestra cómo obtener la información desde la página del INEGI.")
+
 # GIF del tutorial entre los separadores
 st.image("uploads/tutorial.gif", width=700)
 st.markdown("---")
@@ -116,11 +117,12 @@ ETIQUETAS = [
     ("Población con discapacidad", "PD"),
 ]
 
+
 def extraer_valores(texto: str):
     """
-    Busca en el texto cada etiqueta y extrae el entero
-    (permitiendo separadores de miles con comas).
-    Devuelve un dict con claves = códigos (PT, PF...) y valores = int.
+    Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores
+    de miles con comas). Devuelve un dict con claves = códigos (PT, PF...)
+    y valores = int.
     """
     valores = {}
     for etiqueta, codigo in ETIQUETAS:
@@ -134,6 +136,7 @@ def extraer_valores(texto: str):
                 pass
     return valores
 
+
 # --------------------------------------------------------------------
 # Sección 1: Porcentaje de diversidad (MNNAPAM)
 # --------------------------------------------------------------------
@@ -145,14 +148,14 @@ def seccion_diversidad():
 Pega el bloque de texto que contenga, con estas etiquetas **exactas**
 (puede haber líneas extra, pero se deben mantener estas líneas y nombres):
 
-- Población total
-- Población femenina
-- Población masculina
-- Población de 0 a 14 años
-- Población de 15 a 29 años
-- Población de 30 a 59 años
-- Población de 60 años y más
-- Población con discapacidad
+- Población total  
+- Población femenina  
+- Población masculina  
+- Población de 0 a 14 años  
+- Población de 15 a 29 años  
+- Población de 30 a 59 años  
+- Población de 60 años y más  
+- Población con discapacidad  
 
 Los valores pueden venir con separadores de miles con coma (por ejemplo, 6,822),
 y se convertirán automáticamente a enteros sin comas.
@@ -178,7 +181,9 @@ y se convertirán automáticamente a enteros sin comas.
     if st.button("Calcular indicadores de diversidad", key="btn_diversidad"):
         texto_limpio = (texto or "").strip()
         if not texto_limpio:
-            st.error("Por favor, copia y pega el bloque de texto con los datos de población.")
+            st.error(
+                "Por favor, copia y pega el bloque de texto con los datos de población."
+            )
             return
 
         valores = extraer_valores(texto_limpio)
@@ -192,7 +197,9 @@ y se convertirán automáticamente a enteros sin comas.
                 "'Población total' hasta 'Población con discapacidad'."
             )
             if faltantes:
-                st.info("Variables faltantes o mal detectadas: " + ", ".join(faltantes))
+                st.info(
+                    "Variables faltantes o mal detectadas: " + ", ".join(faltantes)
+                )
             return
 
         PT = valores["PT"]
@@ -227,27 +234,22 @@ y se convertirán automáticamente a enteros sin comas.
                     "Porcentaje sobre PT": f"{porcentaje:.2f} %",
                 }
             )
+
         df = pd.DataFrame(filas)
 
         # Guardar en session_state (para reutilizar si el usuario vuelve a esta opción)
         st.session_state["resultado_diversidad"] = mnn_pam
         st.session_state["tabla_diversidad"] = df
 
-    # Mostrar resultados SOLO si:
-# - hay algo guardado Y
-# - el radio actual está en "Porcentaje de diversidad"
-if (
-    st.session_state.get("resultado_diversidad") is not None
-    and st.session_state.get("opcion_radio") == "Porcentaje de diversidad"
-):
-    mnn_pam = st.session_state["resultado_diversidad"]
-    df = st.session_state["tabla_diversidad"]
+    # Mostrar resultados SOLO si hay algo guardado
+    if st.session_state.get("resultado_diversidad") is not None:
+        mnn_pam = st.session_state["resultado_diversidad"]
+        df = st.session_state["tabla_diversidad"]
 
-st.markdown(
+        st.markdown(
             f"""
 La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
-respecto al total de la población es de **{mnn_pam:.2f}**.  
-Copia y pega el siguiente valor en el cuestionario.
+respecto al total de la población es de **{mnn_pam:.2f}**. Copia y pega el siguiente valor en el cuestionario.
 """
         )
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
@@ -261,18 +263,18 @@ es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas per
 Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad.
 El **Placemaking** interpreta espacios con mayores índices de diversidad como contextos
 **más propicios para generar lugares seguros, inclusivos e intergeneracionales**.
+
 Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos
 puedan apropiarse del lugar en forma digna y segura.
 
 ### Fórmula utilizada
 
 Usando los datos de INEGI:
-
-- **PT**: Población total
-- **PF**: Población femenina
-- **PM**: Población masculina
-- **NNA**: Población de 0 a 14 años
-- **PAM**: Población de 60 años y más
+- **PT**: Población total  
+- **PF**: Población femenina  
+- **PM**: Población masculina  
+- **NNA**: Población de 0 a 14 años  
+- **PAM**: Población de 60 años y más  
 """
         st.markdown(texto_exp)
 
@@ -305,6 +307,7 @@ cuántas niñas/niños ni cuántas mujeres/hombres mayores hay. Esto hace que el
             unsafe_allow_html=True,
         )
 
+
 # --------------------------------------------------------------------
 # Definición de indicadores de accesibilidad / conexión
 # --------------------------------------------------------------------
@@ -331,6 +334,7 @@ INDICADORES_ACCESO = [
     ("Puesto semifijo", "PS"),
     ("Puesto ambulante", "PA"),
 ]
+
 
 def parsear_tabla_accesibilidad(texto: str):
     """Busca en el texto cada indicador y extrae los 5 enteros."""
@@ -364,6 +368,7 @@ def parsear_tabla_accesibilidad(texto: str):
             continue
     return valores
 
+
 def calcular_TM(valores_indicadores: dict) -> int:
     """Calcula TM a partir de RDC y TC y verifica que sean iguales."""
     info_rdc = valores_indicadores["RDC"]
@@ -394,6 +399,7 @@ def calcular_TM(valores_indicadores: dict) -> int:
         )
 
     return TM_rdc
+
 
 def calcular_puntajes_acceso(valores_indicadores: dict):
     """Calcula TM y los puntajes por indicador. Devuelve (puntajes, TM)."""
@@ -443,6 +449,7 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
     puntajes["SRPA"] = (TM - base(info_srpa)) / TM
 
     return puntajes, TM
+
 
 # --------------------------------------------------------------------
 # Sección 2: Puntos de accesibilidad y conexión
@@ -503,10 +510,13 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
     if st.button("Calcular puntos de accesibilidad y conexión", key="btn_acceso"):
         texto_limpio = (texto_tabla or "").strip()
         if not texto_limpio:
-            st.error("Por favor, copia y pega la tabla completa de accesibilidad y conexión.")
+            st.error(
+                "Por favor, copia y pega la tabla completa de accesibilidad y conexión."
+            )
             return
 
         valores_indicadores = parsear_tabla_accesibilidad(texto_limpio)
+
         codigos_esperados = [cod for _, cod in INDICADORES_ACCESO]
         codigos_encontrados = list(valores_indicadores.keys())
 
@@ -573,31 +583,16 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
         st.session_state["resultado_PA"] = puntaje_accesibilidad
         st.session_state["resultado_PC"] = puntaje_conexiones
         st.session_state["tabla_acceso"] = df_puntajes
-        
-    # Mostrar resultados SOLO si:
-    # - hay algo guardado Y
-    # - el radio actual está en "Puntos de accesibilidad y conexión"
+
+    # Mostrar resultados SOLO si hay algo guardado
     if (
         st.session_state.get("resultado_PA") is not None
         and st.session_state.get("resultado_PC") is not None
-        and st.session_state.get("opcion_radio") == "Puntos de accesibilidad y conexión"
     ):
         pa = st.session_state["resultado_PA"]
         pc = st.session_state["resultado_PC"]
         df_puntajes = st.session_state["tabla_acceso"]
-    
-        st.subheader("Puntajes agregados")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Puntaje Accesibilidad (PA)", f"{pa:.2f}")
-        with col2:
-            st.metric("Puntaje Conexiones (PC)", f"{pc:.2f}")
-            
-    if st.session_state["resultado_PA"] is not None and st.session_state["resultado_PC"] is not None:
-            pa = st.session_state["resultado_PA"]
-            pc = st.session_state["resultado_PC"]
-            df_puntajes = st.session_state["tabla_acceso"]
-    
+
         st.subheader("Puntajes agregados")
         col1, col2 = st.columns(2)
         with col1:
@@ -646,6 +641,7 @@ valores más altos de **PC** indican mejor conexión del área con el resto de l
             f'<div class="stTable tabla-scroll">{html_puntajes}</div>',
             unsafe_allow_html=True,
         )
+
 
 # --------------------------------------------------------------------
 # Mostrar la sección según la opción elegida
