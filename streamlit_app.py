@@ -66,6 +66,7 @@ Utiliza esta herramienta para obtener los valores de **Porcentaje de diversidad*
 4. Haz clic en **"Consultar"** en la interfaz del mapa para obtener los datos.
 """
 )
+
 st.link_button(
     "Abrir mapa «Espacio y datos de México» del INEGI",
     "https://www.inegi.org.mx/app/mapa/espacioydatos/default.aspx",
@@ -197,7 +198,6 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
     puntajes = {}
     for codigo, info in valores_indicadores.items():
         puntajes[codigo] = base(info) / TM
-
     return puntajes, TM
 
 # --------------------------------------------------------------------
@@ -206,9 +206,10 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
 contenido = st.empty()
 
 with contenido.container():
-    # ----------------------------------------------------------------
+
+    # ---------------------------------------------------------------
     # Rama: Porcentaje de diversidad
-    # ----------------------------------------------------------------
+    # ---------------------------------------------------------------
     if opcion == "Porcentaje de diversidad":
         st.header("Porcentaje de diversidad (MNNAPAM)")
         st.markdown(
@@ -244,7 +245,9 @@ Pega el bloque de texto que contenga, con estas etiquetas **exactas**:
         if st.button("Calcular indicadores de diversidad", key="btn_diversidad"):
             texto_limpio = (texto or "").strip()
             if not texto_limpio:
-                st.error("Por favor, copia y pega el bloque de texto con los datos de población.")
+                st.error(
+                    "Por favor, copia y pega el bloque de texto con los datos de población."
+                )
             else:
                 valores = extraer_valores(texto_limpio)
                 if len(valores) != len(ETIQUETAS):
@@ -254,7 +257,10 @@ Pega el bloque de texto que contenga, con estas etiquetas **exactas**:
                         "Copia y pega nuevamente el bloque completo."
                     )
                     if faltantes:
-                        st.info("Variables faltantes o mal detectadas: " + ", ".join(faltantes))
+                        st.info(
+                            "Variables faltantes o mal detectadas: "
+                            + ", ".join(faltantes)
+                        )
                 else:
                     PT = valores.get("PT", 0)
                     if PT == 0:
@@ -265,7 +271,9 @@ Pega el bloque de texto que contenga, con estas etiquetas **exactas**:
                         NNA = valores.get("NNA", 0)
                         PAM = valores.get("PAM", 0)
 
-                        mnn_pam = ((PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT) * 10
+                        mnn_pam = (
+                            (PF + NNA * (PM / PT) + PAM * (PM / PT)) / PT
+                        ) * 10
 
                         filas = []
                         for etiqueta, codigo in ETIQUETAS:
@@ -279,6 +287,7 @@ Pega el bloque de texto que contenga, con estas etiquetas **exactas**:
                                     "Porcentaje sobre PT": f"{porcentaje:.2f} %",
                                 }
                             )
+
                         df = pd.DataFrame(filas)
 
                         # Guardar resultados SOLO de este indicador
@@ -320,9 +329,9 @@ de cuidado y accesibilidad en el área.
                 unsafe_allow_html=True,
             )
 
-    # ----------------------------------------------------------------
+    # ---------------------------------------------------------------
     # Rama: Puntos de accesibilidad y conexión
-    # ----------------------------------------------------------------
+    # ---------------------------------------------------------------
     else:
         st.header("Puntos de accesibilidad y conexión")
         st.markdown(
@@ -347,11 +356,17 @@ Pega la tabla de indicadores de accesibilidad y conexión, con los encabezados:
         if st.button("Calcular puntos de accesibilidad y conexión", key="btn_acceso"):
             texto_limpio = (texto_tabla or "").strip()
             if not texto_limpio:
-                st.error("Por favor, copia y pega la tabla completa de accesibilidad y conexión.")
+                st.error(
+                    "Por favor, copia y pega la tabla completa de accesibilidad y conexión."
+                )
             else:
                 valores_indicadores = parsear_tabla_accesibilidad(texto_limpio)
                 if len(valores_indicadores) != len(INDICADORES_ACCESO):
-                    faltantes = [cod for _, cod in INDICADORES_ACCESO if cod not in valores_indicadores]
+                    faltantes = [
+                        cod
+                        for _, cod in INDICADORES_ACCESO
+                        if cod not in valores_indicadores
+                    ]
                     st.error(
                         "No se detectaron correctamente todos los indicadores requeridos.\n"
                         "Revisa que los nombres y el formato de la tabla coincidan."
@@ -400,6 +415,7 @@ Pega la tabla de indicadores de accesibilidad y conexión, con los encabezados:
                                     "Puntaje": f"{puntajes.get(codigo, 0):.4f}",
                                 }
                             )
+
                         df_puntajes = pd.DataFrame(filas_puntajes)
 
                         # Guardar resultados SOLO de este indicador
