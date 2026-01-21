@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 import re
-
 import pandas as pd
 import streamlit as st
 
@@ -86,7 +85,7 @@ st.markdown("---")
 # --------------------------------------------------------------------
 st.subheader("Indicadores a utilizar")
 
-# Inicializar variables de estado
+# Inicializar variables de estado (SOLO la primera vez)
 if "resultado_diversidad" not in st.session_state:
     st.session_state["resultado_diversidad"] = None
     st.session_state["tabla_diversidad"] = None
@@ -96,29 +95,12 @@ if "resultado_PA" not in st.session_state:
     st.session_state["resultado_PC"] = None
     st.session_state["tabla_acceso"] = None
 
-# Radio con key para poder detectar cambios
+# Radio con key
 opcion = st.radio(
     "Selecciona qué quieres calcular:",
     ("Porcentaje de diversidad", "Puntos de accesibilidad y conexión"),
     key="opcion_radio",
 )
-
-# Detectar cambio de opción y limpiar resultados del indicador opuesto
-if "opcion_anterior" not in st.session_state:
-    st.session_state["opcion_anterior"] = opcion
-else:
-    if opcion != st.session_state["opcion_anterior"]:
-        if opcion == "Porcentaje de diversidad":
-            # Limpiar resultados de PA/PC
-            st.session_state["resultado_PA"] = None
-            st.session_state["resultado_PC"] = None
-            st.session_state["tabla_acceso"] = None
-        else:
-            # Limpiar resultados de Diversidad
-            st.session_state["resultado_diversidad"] = None
-            st.session_state["tabla_diversidad"] = None
-
-        st.session_state["opcion_anterior"] = opcion
 
 # --------------------------------------------------------------------
 # Definición de etiquetas y funciones comunes (Sección diversidad)
@@ -135,7 +117,9 @@ ETIQUETAS = [
 ]
 
 def extraer_valores(texto: str):
-    """Busca en el texto cada etiqueta y extrae el entero (permitiendo separadores de miles con comas).
+    """
+    Busca en el texto cada etiqueta y extrae el entero
+    (permitiendo separadores de miles con comas).
     Devuelve un dict con claves = códigos (PT, PF...) y valores = int.
     """
     valores = {}
@@ -150,7 +134,6 @@ def extraer_valores(texto: str):
                 pass
     return valores
 
-
 # --------------------------------------------------------------------
 # Sección 1: Porcentaje de diversidad (MNNAPAM)
 # --------------------------------------------------------------------
@@ -162,18 +145,18 @@ def seccion_diversidad():
 Pega el bloque de texto que contenga, con estas etiquetas **exactas**
 (puede haber líneas extra, pero se deben mantener estas líneas y nombres):
 
-- Población total  
-- Población femenina  
-- Población masculina  
-- Población de 0 a 14 años  
-- Población de 15 a 29 años  
-- Población de 30 a 59 años  
-- Población de 60 años y más  
-- Población con discapacidad  
+- Población total
+- Población femenina
+- Población masculina
+- Población de 0 a 14 años
+- Población de 15 a 29 años
+- Población de 30 a 59 años
+- Población de 60 años y más
+- Población con discapacidad
 
 Los valores pueden venir con separadores de miles con coma (por ejemplo, 6,822),
 y se convertirán automáticamente a enteros sin comas.
-        """
+"""
     )
 
     texto = st.text_area(
@@ -236,7 +219,6 @@ y se convertirán automáticamente a enteros sin comas.
                 porcentaje = 100.0
             else:
                 porcentaje = (valor_abs / PT) * 100.0
-
             filas.append(
                 {
                     "Código": codigo,
@@ -247,7 +229,7 @@ y se convertirán automáticamente a enteros sin comas.
             )
         df = pd.DataFrame(filas)
 
-        # Guardar en session_state
+        # Guardar en session_state (para reutilizar si el usuario vuelve a esta opción)
         st.session_state["resultado_diversidad"] = mnn_pam
         st.session_state["tabla_diversidad"] = df
 
@@ -261,7 +243,7 @@ y se convertirán automáticamente a enteros sin comas.
 La proporción de mujeres, niñas, niños y adolescentes, y personas adultas mayores
 respecto al total de la población es de **{mnn_pam:.2f}**.  
 Copia y pega el siguiente valor en el cuestionario.
-            """
+"""
         )
         st.metric(label="Proporción MNNAPAM", value=f"{mnn_pam:.2f}")
 
@@ -270,8 +252,8 @@ Copia y pega el siguiente valor en el cuestionario.
 
 Este indicador estima la proporción de mujeres, niñas, niños y personas adultas mayores que viven en el área,
 es decir, **quiénes podrían potencialmente usar el lugar, pero no cuántas personas lo usan o transitan a diario**.
-Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad.
 
+Un valor más alto sugiere un entorno con mayores necesidades de cuidado y accesibilidad.
 El **Placemaking** interpreta espacios con mayores índices de diversidad como contextos
 **más propicios para generar lugares seguros, inclusivos e intergeneracionales**.
 Un mayor puntaje de diversidad indica mejores condiciones para que distintos grupos
@@ -281,12 +263,12 @@ puedan apropiarse del lugar en forma digna y segura.
 
 Usando los datos de INEGI:
 
-- **PT**: Población total  
-- **PF**: Población femenina  
-- **PM**: Población masculina  
-- **NNA**: Población de 0 a 14 años  
-- **PAM**: Población de 60 años y más  
-        """
+- **PT**: Población total
+- **PF**: Población femenina
+- **PM**: Población masculina
+- **NNA**: Población de 0 a 14 años
+- **PAM**: Población de 60 años y más
+"""
         st.markdown(texto_exp)
 
         st.latex(
@@ -304,7 +286,7 @@ El resultado va de **0 a 10**: a mayor valor, mayor presencia relativa de mujere
 Los datos no vienen desagregados por género dentro de **NNA** y **PAM**, así que **no sabemos exactamente**
 cuántas niñas/niños ni cuántas mujeres/hombres mayores hay. Esto hace que el indicador sea una
 **estimación razonable y comparable**, pero no un conteo exacto por género.
-            """
+"""
         )
 
         st.subheader("Distribución porcentual respecto a la población total")
@@ -314,10 +296,9 @@ cuántas niñas/niños ni cuántas mujeres/hombres mayores hay. Esto hace que el
 <div class="stTable tabla-scroll">
 {html_table}
 </div>
-            """,
+""",
             unsafe_allow_html=True,
         )
-
 
 # --------------------------------------------------------------------
 # Definición de indicadores de accesibilidad / conexión
@@ -419,9 +400,24 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
     puntajes = {}
 
     codigos_TM_directo = [
-        "RDC", "RSR", "PP", "BQ", "GN", "CV", "CC", "AP",
-        "LNC", "TP", "ARB", "SP", "SA", "ADP", "PS", "PA",
+        "RDC",
+        "RSR",
+        "PP",
+        "BQ",
+        "GN",
+        "CV",
+        "CC",
+        "AP",
+        "LNC",
+        "TP",
+        "ARB",
+        "SP",
+        "SA",
+        "ADP",
+        "PS",
+        "PA",
     ]
+
     for codigo in codigos_TM_directo:
         info = valores_indicadores[codigo]
         puntajes[codigo] = base(info) / TM
@@ -442,7 +438,6 @@ def calcular_puntajes_acceso(valores_indicadores: dict):
     puntajes["SRPA"] = (TM - base(info_srpa)) / TM
 
     return puntajes, TM
-
 
 # --------------------------------------------------------------------
 # Sección 2: Puntos de accesibilidad y conexión
@@ -466,7 +461,7 @@ Ejemplo de filas (los números son solo ilustrativos, pero el texto del nombre d
 `Rampa para silla de ruedas 3 14 30 0 0`
 
 Se ignorará cualquier otra línea, como la cabecera o la fecha de actualización.
-        """
+"""
     )
 
     texto_tabla = st.text_area(
@@ -507,7 +502,6 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
             return
 
         valores_indicadores = parsear_tabla_accesibilidad(texto_limpio)
-
         codigos_esperados = [cod for _, cod in INDICADORES_ACCESO]
         codigos_encontrados = list(valores_indicadores.keys())
 
@@ -520,7 +514,10 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
                 "incluyendo los encabezados de columna."
             )
             if faltantes:
-                st.info("Indicadores faltantes o mal detectados (por código): " + ", ".join(faltantes))
+                st.info(
+                    "Indicadores faltantes o mal detectados (por código): "
+                    + ", ".join(faltantes)
+                )
             return
 
         try:
@@ -567,7 +564,7 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
             )
         df_puntajes = pd.DataFrame(filas_puntajes)
 
-        # Guardar en session_state
+        # Guardar en session_state para reutilizar si el usuario vuelve a esta opción
         st.session_state["resultado_PA"] = puntaje_accesibilidad
         st.session_state["resultado_PC"] = puntaje_conexiones
         st.session_state["tabla_acceso"] = df_puntajes
@@ -592,10 +589,10 @@ Se ignorará cualquier otra línea, como la cabecera o la fecha de actualizació
 - **PA (Puntaje de Accesibilidad)** resume cuántas manzanas cuentan con elementos que facilitan caminar y moverse con seguridad (rampas, pasos peatonales, banquetas, semáforos, etc.).
 - **PC (Puntaje de Conexiones)** resume qué tan bien conectado está el área con otros puntos de la ciudad (transporte colectivo, paradas, ciclovías, estaciones de bici, etc.).
 
-Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla:
+Primero, para cada indicador se calcula un **puntaje normalizado** a partir de la tabla
 **Características del entorno urbano** del INEGI, donde **TM** es el total de manzanas.
 Con esos puntajes normalizados se construyen los índices agregados:
-            """
+"""
         )
 
         st.latex(
@@ -604,6 +601,7 @@ PA = 0.5\cdot RDC + 2.0\cdot RSR + 2.0\cdot PP + 1.0\cdot BQ
 + 0.5\cdot GN + 1.0\cdot SA + 1.0\cdot PTP + 2.0\cdot SRPP
 """
         )
+
         st.latex(
             r"""\small
 PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\cdot LNC
@@ -616,7 +614,7 @@ PC = 1.0\cdot RDC + 1.0\cdot BQ + 1.0\cdot GN + 1.5\cdot CV + 0.5\cdot CC + 1.0\
 Cada sigla (RDC, RSR, PP, etc.) es el puntaje normalizado de ese indicador.
 Valores más altos de **PA** indican mejor accesibilidad peatonal;
 valores más altos de **PC** indican mejor conexión del área con el resto de la ciudad.
-            """
+"""
         )
 
         st.subheader("Puntaje por indicador")
@@ -630,9 +628,8 @@ valores más altos de **PC** indican mejor conexión del área con el resto de l
 # Mostrar la sección según la opción elegida
 # --------------------------------------------------------------------
 if opcion == "Porcentaje de diversidad":
-    # Aquí NO se llama a la sección de accesibilidad,
-    # así que PA y PC desaparecen cuando cambias el radio.
+    # Solo se muestra Diversidad (PA/PC quedan ocultos aunque estén guardados)
     seccion_diversidad()
 else:
-    # Aquí NO se llama a diversidad, así que MNNAPAM desaparece al cambiar el radio.
+    # Solo se muestra PA/PC (Diversidad queda oculta aunque esté guardada)
     seccion_accesibilidad_conexion()
