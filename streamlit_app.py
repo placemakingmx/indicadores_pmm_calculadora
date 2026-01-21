@@ -3,6 +3,14 @@ import streamlit as st
 import pandas as pd
 import re
 
+hide_streamlit_header = """
+<style>
+/* Oculta la barra superior de Streamlit */
+header[data-testid="stHeader"] { display: none;
+}
+</style>
+"""
+
 # --------------------------------------------------------------------
 # Rutas base (para logo y CSS)
 # --------------------------------------------------------------------
