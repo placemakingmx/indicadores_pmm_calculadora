@@ -1,266 +1,219 @@
 /* style.css */
 
-/* 1. Importa la fuente Poppins correctamente */
+/* Importa la fuente Poppins al inicio del archivo */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* 2. Fuente global Poppins */
-html, body, [class*="st-"], label, div {
-  font-family: 'Poppins', sans-serif;
-}
-
-/* 3. Variables de color de tu manual */
+/* Variables CSS para los colores de acento que no están en config.toml */
 :root {
-  --space:   #0D0D52;
-  --offwhite:#F4EFE2;
-  --blue:    #0047BB;
-  --indigo:  #685BC7;
-  --lush:    #B7BF10;  /* verde (Lush) */
-  --sunglow: #FED141;  /* amarillo */
-  --orange:  #FF5C39;  /* naranja */
-  --white:   #FFFFFF;
+    --accent-1: #4b295e; /* Encuentro */
+    --accent-2: #ec6420; /* Usos y Actividades */
+    --accent-3: #0087c4; /* Conexiones y Accesos */
+    --accent-4: #1c301d; /* Comodidad e Imagen */
+
+    /* Variables para los componentes personalizados */
+    --slider-track: #e6eef0;
+    --slider-thumb: #2c3e50;
+}
+/* Contenedor de la barra de progreso (“pista” vacía)  */
+div[data-testid="stProgress"] div[role="progressbar"] {
+  background-color: var(--progress-bg);  /* ahora será blanco */
+  border-radius: 8px;
+  height: 18px;
 }
 
-/* 4. Fondo general de la app */
-.stApp {
-  background-color: var(--offwhite) !important;
-  color: var(--space) !important;
+/* Relleno de la barra (la parte que avanza) */
+div[data-testid="stProgress"] div[role="progressbar"] > div {
+  background-color: var(--progress-fill);
+  border-radius: 8px;
+  height: 18px;
 }
 
-/* 5. Quitar esquinas redondeadas de todas las imágenes de la app */
-.stApp img {
-  border-radius: 0 !important;
+/* Fuente global Poppins */
+html, body, [class*="st-"], label, div {
+    font-family: 'Poppins', sans-serif;
 }
 
-/* 6. Títulos / encabezados con Poppins (corregidos los selectores) */
+/* Ensure all headers and Streamlit-generated titles use the same font */
 h1, h2, h3, h4, h5, h6,
-.stMarkdown h1,
-.stMarkdown h2,
-.stMarkdown h3,
-.stMarkdown h4,
-.stMarkdown h5,
-.stMarkdown h6,
-[data-testid="stAppViewContainer"] h1,
-[data-testid="stAppViewContainer"] h2,
-.stHeader .stTitle {
-  font-family: 'Poppins', sans-serif !important;
-  font-weight: 400 !important;
-  line-height: 1.2 !important;
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6,
+[data-testid="stAppViewContainer"] h1, [data-testid="stAppViewContainer"] h2,
+.stHeader, .stTitle {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
 }
 
-/* Botones principales (st.button, submit, etc.) */
-.stButton > button {
-  background-color: var(--space) !important;
-  border-radius: 0.5rem !important;   /* o 8rem si quieres píldora, sin espacio */
-  border: 1px solid var(--space) !important;
-  color: var(--white) !important;
-  box-shadow: none !important;
+/* Bloques de atributo personalizados */
+.bloque-atributo {
+    border-left: 6px solid #ccc;
+    padding-left: 15px;
+    margin-bottom: 1.5rem;
+}
+.bloque-encuentro  { border-color: var(--accent-1); }
+.bloque-usos       { border-color: var(--accent-2); }
+.bloque-conexiones { border-color: var(--accent-3); }
+.bloque-comodidad  { border-color: var(--accent-4); }
+
+.bloque-atributo h3 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.bloque-encuentro h3  { color: var(--accent-1); }
+.bloque-usos h3       { color: var(--accent-2); }
+.bloque-conexiones h3 { color: var(--accent-3); }
+.bloque-comodidad h3  { color: var(--accent-4); }
+
+/* Barra de progreso personalizada */
+div[data-testid="stProgress"] div[role="progressbar"] {
+    background-color: var(--progress-bg);
+    border-radius: 8px;
+    height: 18px;
+}
+div[data-testid="stProgress"] div[role="progressbar"] > div {
+    background-color: var(--progress-fill);
+    border-radius: 8px;
+    height: 18px;
 }
 
-/* Hover de botones normales */
-.stButton > button:hover {
-  background-color: var(--indigo) !important;
-  border-color: var(--indigo) !important;
-  color: var(--white) !important;
-}
-
-/* Botón de enlace (st.link_button) */
-[data-testid="stLinkButton"] > a {
-  background-color: var(--space) !important;
-  border-radius: 0.5rem !important;   /* mismo radio que los otros */
-  border: 1px solid var(--space) !important;
-  color: var(--white) !important;
-  text-decoration: none !important;
-  padding: 0.25rem 0.75rem;           /* opcional, para que se vea como botón */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Hover del botón de enlace */
-[data-testid="stLinkButton"] > a:hover {
-  background-color: var(--indigo) !important;
-  border-color: var(--indigo) !important;
-  color: var(--white) !important;
-}
-
-/* Hover de botones */
-.stButton > button:hover,
-.stLinkButton > button:hover,
-.stLinkButton > a:hover {
-    background-color: var(--indigo)!important;
-    border-color: var(--indigo)!important;
-    color: var(--white)!important;
-}
-
-/* 8. Campos de texto y numéricos */
-.stTextInput > div > div > input,
-.stNumberInput > div > div > input {
-  border-radius: 0 !important;
-  border: 1px solid var(--blue) !important;
-}
-
-/* Efecto al enfocar (focus) en campos de texto y numéricos */
-.stTextInput > div > div > input:focus,
-.stNumberInput > div > div > input:focus {
-  outline: none !important;
-  border-color: var(--indigo) !important;
-  box-shadow: 0 0 0 2px rgba(0, 71, 187, 0.3) !important; /* azul translúcido */
-}
-
-/* 9. Caja de alerta en naranja */
-.alerta-naranja {
-  background-color: var(--orange);
-  color: var(--white);
-  padding: 0.75rem 1rem;
-  border-radius: 0;
-}
-/* ===================== RADIO STREAMLIT: ARO AZUL + PUNTO ÍNDIGO ===================== */
-
-/* 1) Ocultar el radio nativo para que no meta colores (accent-color, etc.) */
-.stRadio > div[role="radiogroup"] input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 2) Aro exterior: primer div dentro del label es el círculo contenedor */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child {
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  border: 2px solid var(--blue) !important;      /* aro azul siempre */
-  background-color: var(--offwhite) !important;  /* fondo interior */
-
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none !important;
-}
-
-/* 3) Puntito interior: segundo div dentro del contenedor */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div {
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 50% !important;
-  box-shadow: none !important;
-}
-
-/* 4) Puntito de la opción SELECCIONADA: clase st-bd -> índigo */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-bd {
-  background-color: var(--indigo) !important;
-}
-
-/* 5) Puntito de la opción NO seleccionada: clase st-by -> transparente */
-.stRadio > div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child > div.st-by {
-  background-color: transparent !important;
-}
-
-/* ======================= ESTILO PARA TABLAS st.table ======================= */
-.stTable {
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: var(--white);
-  overflow: hidden;
-  font-family: 'Poppins', sans-serif;
-}
-
-.stTable table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-  background-color: var(--white);
-}
-
-.stTable thead tr th {
-  background-color: var(--indigo);
-  color: #ffffff;
-  padding: 0.55rem 0.75rem;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.stTable tbody tr td {
-  padding: 0.45rem 0.75rem;
-  color: var(--space);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.stTable tbody tr:nth-child(even) td {
-  background-color: rgba(0, 0, 0, 0.015);
-}
-
-.stTable tbody tr:hover td {
-  background-color: rgba(254, 209, 65, 0.12);
-}
-
-/* ========== CONTENEDOR SCROLL PARA TABLA (MISMO DISEÑO) ========== */
-.tabla-scroll {
-  max-height: 260px;         /* alto fijo */
-  overflow-y: auto;          /* scroll vertical */
-  overflow-x: auto;          /* scroll horizontal si hace falta */
-  width: 100%;
-  border-radius: 0.75rem;    /* igual que .stTable */
-}
-
-/* En móvil puedes darle un poco más de alto si quieres */
-@media (max-width: 768px) {
-  .tabla-scroll {
-    max-height: 300px;
-  }
-}
-
-/* ================= TEXT AREA: QUITAR MARCO ROJO ================= */
-
-/* Contenedor BaseWeb del text_area (cuadro completo) */
-.stTextArea div[data-baseweb="textarea"] {
-    border-radius: 0.5rem !important;              /* opcional, por estética */
-    border: 1px solid rgba(0, 0, 0, 0.2) !important;
-    box-shadow: none !important;                   /* quita sombras por defecto */
-  
-}
-
-/* Cuando el text_area tiene foco (focus-within) */
-.stTextArea div[data-baseweb="textarea"]:focus-within {
-    border-color: var(--indigo) !important;          /* tu azul corporativo */
-    box-shadow: 0 0 0 1px var(--indigo) !important;  /* halo azul en vez de rojo */
-    background-color: var(--white);
-}
-/* El propio textarea por dentro */
-.stTextArea textarea {
-    border: none !important;        /* el borde lo maneja el contenedor */
-    box-shadow: none !important;    /* quita cualquier sombra interna */
-    outline: none !important;       /* sin outline por defecto */
-    background-color: var(--white);
-}
-
-/* Por si acaso, en estado focus (aunque outline ya está en none) */
-.stTextArea textarea:focus {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
-/* Contenedor con tamaño fijo y scroll */
-.tabla-scroll {
-    max-height: 260px;      /* alto fijo aproximado */
-    overflow-y: auto;       /* scroll vertical si hay muchas filas */
-    overflow-x: auto;       /* scroll horizontal si hay muchas columnas */
-    width: 100%;            /* ocupa todo el ancho disponible */
-}
-
-/* Opcional: que la tabla use todo el ancho del contenedor */
-.tabla-scroll table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Mejora de usabilidad en pantallas pequeñas (móvil) */
-@media (max-width: 768px) {
-    .tabla-scroll {
-        max-height: 300px;  /* puedes dar un poco más de alto en móvil */
-        overflow-y: auto;
-        overflow-x: auto;   /* permite desplazarse horizontalmente */
-        display: block;
+/* Estilos de impresión para ocultar la UI de Streamlit */
+@media print {
+    header[data-testid="stHeader"],
+    footer,
+    div[data-testid="stToolbar"],
+    .stDeployButton {
+        display: none !important;
     }
 }
+
+/* --------------------------------------------------
+   Slider styling: track, thumb and accent color
+   Applies to Streamlit sliders (input[type="range"]).
+   You can change the colors via the CSS variables above:
+   --slider-track, --slider-thumb, --progress-fill
+   -------------------------------------------------- */
+
+/* Base reset for ranges */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    accent-color: var(--progress-fill);
+}
+
+/* WebKit track */
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    background: var(--slider-track);
+    border-radius: 999px;
+}
+
+/* WebKit thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -5px; /* roughly center the thumb */
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--slider-thumb);
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Firefox track & thumb */
+input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: var(--slider-track);
+    border-radius: 999px;
+}
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--slider-thumb);
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* IE/Edge fallback */
+input[type="range"]::-ms-track {
+    height: 8px;
+    background: transparent;
+    border-color: transparent;
+}
+input[type="range"]::-ms-fill-lower {
+    background: var(--slider-track);
+    border-radius: 999px;
+}
+input[type="range"]::-ms-fill-upper {
+    background: var(--slider-track);
+    border-radius: 999px;
+}
+
+/* Optional: narrower slider containers in Streamlit columns */
+.stSlider input[type="range"] {
+    min-width: 160px;
+}
+
+/* Stronger overrides for Streamlit slider wrappers and edge cases.
+   Uses high-specificity selectors and !important to override Streamlit styles. */
+[data-testid="stSlider"] input[type="range"],
+.stSlider input[type="range"],
+div[data-testid="stSlider"] input[type="range"],
+input[type="range"][role="slider"],
+input[role="slider"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background: transparent !important;
+    accent-color: var(--progress-fill) !important;
+}
+
+/* WebKit track override */
+[data-testid="stSlider"] input[type="range"]::-webkit-slider-runnable-track,
+.stSlider input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px !important;
+    background: var(--slider-track) !important;
+    border-radius: 999px !important;
+}
+
+/* WebKit thumb override */
+[data-testid="stSlider"] input[type="range"]::-webkit-slider-thumb,
+.stSlider input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: var(--progress-fill) !important;
+    border: 2px solid #fff !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12) !important;
+    margin-top: -5px !important;
+}
+
+/* Firefox overrides */
+[data-testid="stSlider"] input[type="range"]::-moz-range-track,
+.stSlider input[type="range"]::-moz-range-track,
+input[type="range"]::-moz-range-track {
+    height: 8px !important;
+    background: var(--slider-track) !important;
+    border-radius: 999px !important;
+}
+[data-testid="stSlider"] input[type="range"]::-moz-range-thumb,
+.stSlider input[type="range"]::-moz-range-thumb,
+input[type="range"]::-moz-range-thumb {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: var(--progress-fill) !important;
+    border: 2px solid #fff !important;
+    box-shadow: 2px solid #fff !important;
+}
+
+/* Ensure the filled track color uses the accent where supported */
+input[type="range"] {
+    accent-color: var(--progress-fill) !important;
+}
+
+/* assets/styles.css */
